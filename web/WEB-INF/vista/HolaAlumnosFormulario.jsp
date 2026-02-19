@@ -5,7 +5,7 @@
 </head>
 <body>
 <div>
-    <form action="procesaFormulario" method="get">
+    <form action="procesaFormulario2" method="get">
 
         <input type="text" name="nombreAlumno">
 
