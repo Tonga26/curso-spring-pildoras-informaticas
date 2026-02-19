@@ -14,10 +14,11 @@ public class Controlador {
 
     /**
      * SECCIÓN: MAPEO DE RUTAS
-     * @RequestMapping sin parámetros entre paréntesis significa que este método
-     * responderá a la URL raíz de tu aplicación (ej. localhost:8080/Spring_MVC_Ejemplo1/).
+     * @RequestMapping
+     * // BUENA PRÁCTICA: Siempre definir la ruta raíz de forma explícita ("/")
+     * // para evitar errores 404 en servidores de producción (Tomcat standalone).
      */
-    @RequestMapping
+    @RequestMapping ("/")
     public String muestraPagina(){
 
         // Retorna el nombre lógico de la vista.
