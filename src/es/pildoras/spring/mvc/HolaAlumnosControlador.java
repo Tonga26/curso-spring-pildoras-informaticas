@@ -65,7 +65,7 @@ public class HolaAlumnosControlador {
          * Empaquetamos nuestro 'mensajeFinal' bajo la etiqueta "mensajeClaro".
          * Así, la vista JSP podrá llamarlo usando ${mensajeClaro}.
          */
-        String mensajeFinal = "¿Quien es el mejor alumno?" + nombre;
+        String mensajeFinal = "¿Quien es el mejor alumno? " + nombre;
         // Agregar info al modelo
         modelo.addAttribute("mensajeClaro", mensajeFinal);
 
