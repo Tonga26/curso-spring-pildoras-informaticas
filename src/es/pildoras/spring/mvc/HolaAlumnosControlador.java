@@ -5,40 +5,49 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
+// import javax.servlet.http.HttpServletRequest;
 
+/**
+ * SECCIÓN: ENRUTAMIENTO JERÁRQUICO A NIVEL DE CLASE
+ * Para evitar problemas de ambigüedad en las rutas (por ejemplo, que dos controladores
+ * distintos tengan un método mapeado a "/muestraFormulario"), debemos agregar una
+ * ruta relativa (llamada por ejemplo "principal") a nivel de clase.
+ * Esta va a ser la ruta "padre" o prefijo de TODAS las rutas contenidas en esta clase.
+ */
 @Controller
+@RequestMapping ("/principal")
 public class HolaAlumnosControlador {
 
     /**
-     * SECCIÓN: MOSTRAR EL FORMULARIO VACÍO
-     * Este método se ejecuta cuando el usuario hace clic en el enlace de paginaEjemplo.
-     * Solo sirve para entregar el HTML del formulario al cliente.
+     * MOSTRAR EL FORMULARIO VACÍO
+     * Este método se ejecuta cuando el usuario hace clic en el enlace.
+     * Como la clase tiene el prefijo "/principal", la ruta real para llegar aquí
+     * ahora es: /principal/muestraFormulario
      */
     @RequestMapping ("/muestraFormulario")
     public String muestraFormulario(){
+
         // Busca el archivo /WEB-INF/vista/HolaAlumnosFormulario.jsp
         return "HolaAlumnosFormulario";
     }
 
     /**
-     * SECCIÓN: PROCESAR LOS DATOS ENVIADOS (BÁSICO)
-     * Este método es el "action" del formulario original.
-     * Solo redirige a otra vista sin manipular datos complejos.
+     * PROCESAR LOS DATOS ENVIADOS
+     * Este método es el "action" del formulario.
+     * Su ruta real ahora es: /principal/procesaFormulario
      */
     @RequestMapping("/procesaFormulario")
     public String procesaFormulario(){
+
         // Busca el archivo /WEB-INF/vista/HolaAlumnosSpring.jsp
         return "HolaAlumnosSpring";
     }
 
     /**
      * SECCIÓN: PROCESAMIENTO AVANZADO CON @RequestParam Y MODELO
-     * Este método recibe los datos del formulario, pero ahora delegando a Spring
-     * la tarea de extraer los parámetros de la URL o el cuerpo de la petición.
-     * 
-     * En Java Servlets puro harías: String nombre = request.getParameter("nombreAlumno");
-     * En Spring MVC: Usamos @RequestParam directamente en los argumentos del método.
+     * Su ruta real ahora es: /principal/procesaFormulario2
+     * * Este método recibe los datos del formulario, los manipula en el backend
+     * y luego envía información nueva hacia la vista usando el objeto Model.
      */
     @RequestMapping("/procesaFormulario2")
     // VERSIÓN ANTIGUA (Java EE Puro con Servlets):
@@ -49,8 +58,11 @@ public class HolaAlumnosControlador {
 
         /*
          * VERSIÓN ANTIGUA (COMENTADA):
+         * HttpServletRequest request:
+         * Es el objeto que contiene TODA la información de la petición que hizo el navegador.
+         * (IP del usuario, tipo de navegador, cookies, y por supuesto, los datos del formulario).
          * Antes necesitábamos recibir el objeto gigante 'request' entero solo para
-         * llamar a su método getParameter y extraer un simple String.
+         * llamar a su método getParameter("nombreAlumno") y extraer un simple String.
          */
         // String nombre = request.getParameter("nombreAlumno");
 
@@ -64,23 +76,26 @@ public class HolaAlumnosControlador {
          */
 
         /*
-         * Aquí simplemente manipulamos el dato puro de Java que Spring ya nos entregó.
+         * Aquí simplemente manipulamos el dato puro de Java.
          * Le concatenamos texto al nombre que escribió el usuario.
          */
         nombre += " es el mejor alumno.";
-        String mensajeFinal = "¿Quien es el mejor alumno? " + nombre;
 
         /*
          * Model modelo:
-         * Es la "caja" que Spring nos da para meter datos que viajarán hacia la Vista.
+         * Es como una "caja" o un "maletín" que Spring nos da para meter datos
+         * que queremos que viajen desde este Controlador hacia la Vista (el archivo JSP).
+         * * addAttribute("nombreDeLaVariable", valorQueContiene):
          * Empaquetamos nuestro 'mensajeFinal' bajo la etiqueta "mensajeClaro".
-         * Así, la vista JSP podrá imprimirlo usando ${mensajeClaro}.
+         * Así, la vista JSP podrá llamarlo usando ${mensajeClaro}.
          */
+        String mensajeFinal = "¿Quien es el mejor alumno? " + nombre;
+        // Agregar info al modelo
         modelo.addAttribute("mensajeClaro", mensajeFinal);
 
         /*
-         * Devolvemos el nombre lógico de la vista JSP.
-         * Spring tomará el Modelo y lo fusionará con esta vista para crear el HTML final.
+         * Devolvemos el nombre lógico de la vista.
+         * Spring tomará la "caja" (Model) y se la entregará a este JSP para que la renderice.
          */
         return "HolaAlumnosSpring";
     }
