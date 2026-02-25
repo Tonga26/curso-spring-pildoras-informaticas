@@ -1,4 +1,4 @@
-package es.pildoras.spring.mvc;
+package es.pildoras.spring.mvc.fundamentos;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,7 @@ public class ControladorPruebaRutas {
     public String muestraFormulario(){
         // Busca el archivo /WEB-INF/vista/HolaAlumnosFormulario.jsp
         // No hay problema en que dos controladores distintos devuelvan la misma vista.
-        return "HolaAlumnosFormulario";
+        return "fundamentos/HolaAlumnosFormulario";
     }
 
     /**
@@ -42,6 +42,6 @@ public class ControladorPruebaRutas {
 
         modelo.addAttribute("mensajeClaro", mensajeFinal);
 
-        return "HolaAlumnosSpring";
+        return "fundamentos/HolaAlumnosSpring";
     }
 }

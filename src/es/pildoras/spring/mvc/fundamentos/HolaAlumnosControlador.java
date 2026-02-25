@@ -1,4 +1,4 @@
-package es.pildoras.spring.mvc;
+package es.pildoras.spring.mvc.fundamentos;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +28,7 @@ public class HolaAlumnosControlador {
     public String muestraFormulario(){
 
         // Busca el archivo /WEB-INF/vista/HolaAlumnosFormulario.jsp
-        return "HolaAlumnosFormulario";
+        return "fundamentos/HolaAlumnosFormulario";
     }
 
     /**
@@ -40,7 +40,7 @@ public class HolaAlumnosControlador {
     public String procesaFormulario(){
 
         // Busca el archivo /WEB-INF/vista/HolaAlumnosSpring.jsp
-        return "HolaAlumnosSpring";
+        return "fundamentos/HolaAlumnosSpring";
     }
 
     /**
@@ -97,6 +97,6 @@ public class HolaAlumnosControlador {
          * Devolvemos el nombre lógico de la vista.
          * Spring tomará la "caja" (Model) y se la entregará a este JSP para que la renderice.
          */
-        return "HolaAlumnosSpring";
+        return "fundamentos/HolaAlumnosSpring";
     }
 }

@@ -1,4 +1,4 @@
-package es.pildoras.spring.mvc;
+package es.pildoras.spring.mvc.fundamentos;
 
 // Importaciones necesarias de Spring
 import org.springframework.stereotype.Controller;
@@ -23,6 +23,6 @@ public class Controlador {
 
         // Retorna el nombre lógico de la vista.
         // El ViewResolver le agregará el prefijo y sufijo: /WEB-INF/vista/paginaEjemplo.jsp
-        return "paginaEjemplo";
+        return "fundamentos/paginaEjemplo";
     }
 }
