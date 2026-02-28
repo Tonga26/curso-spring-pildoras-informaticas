@@ -16,14 +16,31 @@ public class Alumno {
 
     private String nombre;
     private String apellido;
+    private String optativa;
+    private String ciudadEstudios;
+
+    /**
+     * NOTA SOBRE MÚLTIPLES VALORES (CHECKBOXES):
+     * Cuando el usuario selecciona múltiples opciones en un checkbox, Spring
+     * inteligentemente los concatena separados por comas y los inyecta en
+     * este String único. En aplicaciones más avanzadas, este atributo
+     * suele ser un Array (String[]) o una Lista (List<String>).
+     */
+    private String idiomasAlumno;
 
     // Cuando el formulario se carga, Spring llama a estos Getters para ver
     // si hay información pre-cargada que mostrar en los <input>.
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
+    public String getOptativa() { return optativa; }
+    public String getCiudadEstudios() { return ciudadEstudios; }
+    public String getIdiomasAlumno() { return idiomasAlumno; }
 
     // Cuando el usuario hace clic en "Enviar", Spring llama automáticamente
     // a estos Setters para inyectar lo que el usuario escribió en el HTML.
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setApellido(String apellido) { this.apellido = apellido; }
+    public void setOptativa(String optativa) { this.optativa = optativa; }
+    public void setCiudadEstudios(String ciudadEstudios) { this.ciudadEstudios = ciudadEstudios; }
+    public void setIdiomasAlumno(String idiomasAlumno) { this.idiomasAlumno = idiomasAlumno; }
 }
