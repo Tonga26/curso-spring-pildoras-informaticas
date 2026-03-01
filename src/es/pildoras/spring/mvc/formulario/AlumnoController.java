@@ -1,8 +1,11 @@
 package es.pildoras.spring.mvc.formulario;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,6 +22,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/alumno")
 public class AlumnoController {
+
+    public AlumnoController() {
+    }
 
     /**
      * PASO 1: PREPARAR EL ESCENARIO (EL FORMULARIO VACÍO)
@@ -85,5 +91,30 @@ public class AlumnoController {
             // Si la validación pasó limpia, vamos a la pantalla de éxito.
             return "formulario/confirmacionRegistroAlumno";
         }
+    }
+
+    /**
+     * SECCIÓN: PRE-PROCESAMIENTO DE PETICIONES (@InitBinder)
+     * Este método se ejecuta SIEMPRE antes de que el controlador procese cualquier petición web.
+     * Actúa como un filtro que limpia o transforma los datos entrantes antes del Data Binding.
+     * 
+     * * COMPARACIÓN CON JAVA EE (SERVLETS):
+     * En Java EE tendrías que haber llamado manualmente a la función .trim() por cada variable:
+     * String nombre = request.getParameter("nombre").trim();
+     * if (nombre.isEmpty()) nombre = null;
+     */
+    @InitBinder
+    public void miBinder(WebDataBinder binder){
+
+        // StringTrimmerEditor es una clase nativa de Spring.
+        // Su función es eliminar los espacios en blanco iniciales y finales de un String.
+        // El parámetro 'true' es la clave: le dice a Spring que si después de recortar
+        // los espacios el String queda completamente vacío (""), debe convertirlo a 'null'.
+        StringTrimmerEditor recortaEspaciosBlanco = new StringTrimmerEditor(true);
+
+        // Aquí registramos la regla en el "binder" (el motor que une el HTML con Java).
+        // Le indicamos: "Para CUALQUIER dato de tipo String.class que llegue del formulario,
+        // aplícale la regla 'recortaEspaciosBlanco' antes de inyectarlo en mi objeto Alumno".
+        binder.registerCustomEditor(String.class, recortaEspaciosBlanco);
     }
 }
