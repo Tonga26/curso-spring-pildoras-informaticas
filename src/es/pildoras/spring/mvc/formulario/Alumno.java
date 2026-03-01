@@ -25,7 +25,9 @@ public class Alumno {
     /**
      * SECCIÓN: ANOTACIONES DE VALIDACIÓN EN GETTERS
      * Cuando Spring recibe los datos, lee estas anotaciones para saber si los acepta.
-     * @NotNull: Impide que el valor viaje como un objeto nulo.
+     * * @NotBlank: Es superior a @NotNull para cadenas de texto. No solo impide nulos,
+     * sino que recorta espacios en blanco (trim) y verifica que el usuario haya
+     * escrito caracteres reales.
      * @Size: Restringe la longitud de una cadena de texto (String).
      */
     @NotBlank
@@ -45,11 +47,15 @@ public class Alumno {
     public int getEdad() { return edad; }
 
     /**
-     * @Email: Verifica que la cadena contenga un formato válido (ejemplo@dominio.com).
-     * NOTA: @Email acepta campos vacíos. Si quieres que el email sea OBLIGATORIO,
-     * debes acompañarlo con un @NotNull o @NotBlank.
+     * SECCIÓN: VALIDACIÓN COMBINADA PARA CORREO ELECTRÓNICO
+     * Aquí estamos apilando reglas. Spring Validator evaluará ambas anotaciones
+     * en orden antes de dar el visto bueno para guardar el dato.
+     * * @NotBlank: Asegura que el usuario no envíe la caja vacía o llena de espacios.
+     * @Email: Entra en acción solo si hay texto, verificando que contenga un
+     * formato válido (ejemplo@dominio.com).
      */
-    @Email(message = "Formato de email incorrecto")
+    @NotBlank(message = "El email es un campo obligatorio y no puede quedar en blanco")
+    @Email(message = "El formato de email ingresado es incorrecto")
     public String getEmail() { return email; }
 
     public String getOptativa() { return optativa; }
