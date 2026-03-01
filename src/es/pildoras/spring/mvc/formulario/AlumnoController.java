@@ -2,8 +2,11 @@ package es.pildoras.spring.mvc.formulario;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 /**
  * SECCIÓN: DECLARACIÓN DEL CONTROLADOR Y NAMESPACE
@@ -44,34 +47,43 @@ public class AlumnoController {
     }
 
     /**
-     * PASO 2: RECIBIR Y PROCESAR (DATA BINDING)
-     * * @ModelAttribute("elAlumno") hace un trabajo gigantesco por detrás:
+     * PASO 2: RECIBIR, VALIDAR Y PROCESAR (DATA BINDING)
+     * * * @ModelAttribute("elAlumno") hace un trabajo gigantesco por detrás:
      * 1. Intercepta la petición POST/GET del formulario.
      * 2. Busca los campos HTML (nombre, apellido) que coincidan con la clase Alumno.
      * 3. Llama a los métodos Setters (setNombre, setApellido) y les inyecta el texto del usuario.
      * 4. Nos entrega el objeto 'elAlumno' completamente lleno y listo para guardar en una base de datos.
      * 5. Vuelve a guardar automáticamente este objeto rellenado en el 'Model' para que viaje a la vista final.
-     * * @param elAlumno El objeto POJO ya instanciado y rellenado por Spring.
-     * @return String con la ruta relativa hacia la vista de confirmación.
+     *
+     * * * @Valid: Le dice a Spring "¡Alto! Antes de inyectar los datos en 'elAlumno',
+     * revisa sus anotaciones (@NotNull, @Min, @Email) y valida todo".
+     * * * BindingResult: Es la "libreta de reportes". Aquí Spring anota si la validación falló.
+     * IMPORTANTE: BindingResult DEBE ir inmediatamente después del parámetro @Valid.
      */
     @RequestMapping("/procesarFormulario")
-    public String procesarFormulario(@ModelAttribute("elAlumno") Alumno elAlumno){
+    public String procesarFormulario(@Valid @ModelAttribute("elAlumno") Alumno elAlumno, BindingResult resultadovalidacion){
 
-        /*
-         * COMPARACIÓN CON JAVA EE (SERVLETS PUROS):
-         * En un Servlet tradicional, tendrías que haber hecho todo esto a mano, línea por línea:
-         * * String nom = request.getParameter("nombre");
-         * String ape = request.getParameter("apellido");
-         * Alumno elAlumno = new Alumno();
-         * elAlumno.setNombre(nom);
-         * elAlumno.setApellido(ape);
-         * request.setAttribute("elAlumno", elAlumno);
-         * * ¡Spring hace esas 6 líneas de código aburrido automáticamente solo con la anotación @ModelAttribute!
-         */
+        // hasErrors() revisa la libreta de reportes. Si hay al menos un error...
+        if (resultadovalidacion.hasErrors()){
 
-        // Como Spring ya guardó automáticamente 'elAlumno' en el Model,
-        // no hace falta hacer un modelo.addAttribute(...) de nuevo aquí.
-        // Solo nos queda derivar a la vista de éxito.
-        return "formulario/confirmacionRegistroAlumno";
+            // ...cortamos el flujo y devolvemos al usuario al formulario.
+            // Spring se encargará de mostrar los mensajes definidos en la clase Alumno.
+            return "formulario/alumnoRegistroFormulario";
+        } else {
+            /*
+             * COMPARACIÓN CON JAVA EE (SERVLETS PUROS):
+             * En un Servlet tradicional, tendríamos que haber hecho todo esto a mano, línea por línea:
+             * * String nom = request.getParameter("nombre");
+             * String ape = request.getParameter("apellido");
+             * Alumno elAlumno = new Alumno();
+             * elAlumno.setNombre(nom);
+             * elAlumno.setApellido(ape);
+             * request.setAttribute("elAlumno", elAlumno);
+             * * ¡Spring hace esas 6 líneas de código automáticamente solo con la anotación @ModelAttribute!
+             */
+
+            // Si la validación pasó limpia, vamos a la pantalla de éxito.
+            return "formulario/confirmacionRegistroAlumno";
+        }
     }
 }

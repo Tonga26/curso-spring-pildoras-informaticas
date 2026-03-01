@@ -1,45 +1,66 @@
 package es.pildoras.spring.mvc.formulario;
 
+import javax.validation.constraints.*;
+
 /**
- * SECCIÓN: EL MODELO DE DATOS (POJO)
- * En la arquitectura MVC, esto es la "M". Representa una entidad del mundo real.
- * Requisito indispensable: Debe tener un constructor vacío (Java lo pone por defecto si no creas otro)
- * y métodos Getters y Setters estándar.
- * * * COMPARACIÓN CON JAVA EE (SERVLETS PUROS):
- * En Java EE, tú eras el único responsable de instanciar esta clase usando 'new Alumno()'
- * dentro del Servlet, y luego llenarla manualmente dato por dato extrayéndolos del 'request'.
- * En Spring MVC, el framework usa una característica avanzada de Java llamada "Reflexión" (Reflection).
- * Spring crea el objeto por ti en la memoria (usando el constructor vacío) y busca automáticamente
- * los métodos 'set' que coincidan con los nombres de los campos de tu formulario HTML para inyectar los datos.
+ * SECCIÓN: EL MODELO DE DATOS (POJO) CON REGLAS DE VALIDACIÓN
+ * En la arquitectura MVC, esto es la "M".
+ * Requisito indispensable: Debe tener un constructor vacío y métodos Getters y Setters.
+ *
+ * COMPARACIÓN CON JAVA EE (SERVLETS PUROS):
+ * En Java EE, tú eras el único responsable de instanciar esta clase y llenarla a mano.
+ * Además, tenías que crear métodos gigantes llenos de "if/else" para validar cada campo.
+ * En Spring MVC, delegamos la creación del objeto al framework y la validación a Hibernate Validator.
  */
 public class Alumno {
 
     private String nombre;
     private String apellido;
+    private int edad;
+    private String email;
     private String optativa;
     private String ciudadEstudios;
-
-    /**
-     * NOTA SOBRE MÚLTIPLES VALORES (CHECKBOXES):
-     * Cuando el usuario selecciona múltiples opciones en un checkbox, Spring
-     * inteligentemente los concatena separados por comas y los inyecta en
-     * este String único. En aplicaciones más avanzadas, este atributo
-     * suele ser un Array (String[]) o una Lista (List<String>).
-     */
     private String idiomasAlumno;
 
-    // Cuando el formulario se carga, Spring llama a estos Getters para ver
-    // si hay información pre-cargada que mostrar en los <input>.
+    /**
+     * SECCIÓN: ANOTACIONES DE VALIDACIÓN EN GETTERS
+     * Cuando Spring recibe los datos, lee estas anotaciones para saber si los acepta.
+     * @NotNull: Impide que el valor viaje como un objeto nulo.
+     * @Size: Restringe la longitud de una cadena de texto (String).
+     */
+    @NotBlank
+    @Size(min = 2, message = "El nombre debe tener mínimo 2 letras y no debe quedar en blanco")
     public String getNombre() { return nombre; }
+
+    @NotBlank
+    @Size(min = 2, message = "El apellido debe tener mínimo 2 letras y no debe quedar en blanco")
     public String getApellido() { return apellido; }
+
+    /**
+     * @Min y @Max: Se usan específicamente para validar números (int, Integer, double, etc.).
+     * Automáticamente evitan que el usuario ingrese edades absurdas.
+     */
+    @Min(value = 18, message = "No se permite que la edad sea menor a 18")
+    @Max(value = 100, message = "No se permite que la edad sea mayor a 100")
+    public int getEdad() { return edad; }
+
+    /**
+     * @Email: Verifica que la cadena contenga un formato válido (ejemplo@dominio.com).
+     * NOTA: @Email acepta campos vacíos. Si quieres que el email sea OBLIGATORIO,
+     * debes acompañarlo con un @NotNull o @NotBlank.
+     */
+    @Email(message = "Formato de email incorrecto")
+    public String getEmail() { return email; }
+
     public String getOptativa() { return optativa; }
     public String getCiudadEstudios() { return ciudadEstudios; }
     public String getIdiomasAlumno() { return idiomasAlumno; }
 
-    // Cuando el usuario hace clic en "Enviar", Spring llama automáticamente
-    // a estos Setters para inyectar lo que el usuario escribió en el HTML.
+    // Setters (Spring los llama automáticamente para inyectar los datos)
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setApellido(String apellido) { this.apellido = apellido; }
+    public void setEdad(int edad) { this.edad = edad; }
+    public void setEmail(String email) { this.email = email; }
     public void setOptativa(String optativa) { this.optativa = optativa; }
     public void setCiudadEstudios(String ciudadEstudios) { this.ciudadEstudios = ciudadEstudios; }
     public void setIdiomasAlumno(String idiomasAlumno) { this.idiomasAlumno = idiomasAlumno; }

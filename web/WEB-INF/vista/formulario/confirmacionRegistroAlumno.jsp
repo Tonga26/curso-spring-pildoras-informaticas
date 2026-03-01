@@ -40,13 +40,15 @@
 
     <div class="datos-registro">
         El alumno <b>${elAlumno.nombre} ${elAlumno.apellido}</b> se ha registrado con éxito.<br><br>
+        <b>Edad:</b> ${elAlumno.edad} <br>
+        <b>E-mail:</b> ${elAlumno.email} <br>
         <b>Asignatura/s:</b> ${elAlumno.optativa} <br>
         <b>Ciudad:</b> ${elAlumno.ciudadEstudios} <br>
         <b>Idiomas:</b> ${elAlumno.idiomasAlumno}
     </div>
 
     <%--
-      SECCIÓN NUEVA: NAVEGACIÓN HACIA EL DASHBOARD
+      NAVEGACIÓN HACIA EL DASHBOARD
       Cerramos el ciclo perfecto. El usuario registró el dato exitosamente y ahora puede
       volver a la pantalla principal de tu portfolio para seguir explorando otros ejercicios.
     --%>
