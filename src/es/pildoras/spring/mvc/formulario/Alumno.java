@@ -1,5 +1,7 @@
 package es.pildoras.spring.mvc.formulario;
 
+import es.pildoras.spring.mvc.formulario.validacionespersonalizadas.CPostalMendoza;
+
 import javax.validation.constraints.*;
 
 /**
@@ -48,6 +50,7 @@ public class Alumno {
 
     /**
      * SECCIÓN: VALIDACIÓN CON EXPRESIONES REGULARES (RegEx)
+     * (CÓDIGO COMENTADO PARA REFERENCIA)
      * @Pattern: Obliga a que el texto ingresado coincida exactamente con un patrón matemático.
      * Desglose de la fórmula "[0-9]{4}":
      * - [0-9]: Define un "rango". Solo acepta números del 0 al 9.
@@ -57,7 +60,16 @@ public class Alumno {
      * expresión, y evaluarla usando un objeto 'Matcher' dentro de un bloque if/else en tu
      * Servlet. Spring MVC lo resuelve de forma declarativa con una sola línea.
      */
-    @Pattern(regexp = "[0-9]{4}", message = "Solo se permiten 4 valores numéricos")
+    //@Pattern(regexp = "[0-9]{4}", message = "Solo se permiten 4 valores numéricos")
+
+    /**
+     * SECCIÓN: VALIDACIÓN PERSONALIZADA (CUSTOM ANNOTATION)
+     * Al colocar @CPostalMendoza, Spring busca la clase CPostalMendozaValidacion.class
+     * y ejecuta su método isValid().
+     * Como no le pasamos parámetros, usará el valor "55" y el mensaje por defecto
+     * configurados en la interfaz CPostalMendoza.
+     */
+    @CPostalMendoza
     public String codigoPostal;
 
     /**
