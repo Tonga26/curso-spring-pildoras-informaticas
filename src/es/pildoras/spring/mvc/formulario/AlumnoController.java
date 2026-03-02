@@ -97,7 +97,7 @@ public class AlumnoController {
      * SECCIÓN: PRE-PROCESAMIENTO DE PETICIONES (@InitBinder)
      * Este método se ejecuta SIEMPRE antes de que el controlador procese cualquier petición web.
      * Actúa como un filtro que limpia o transforma los datos entrantes antes del Data Binding.
-     * 
+     *
      * * COMPARACIÓN CON JAVA EE (SERVLETS):
      * En Java EE tendrías que haber llamado manualmente a la función .trim() por cada variable:
      * String nombre = request.getParameter("nombre").trim();

@@ -47,16 +47,39 @@ public class Alumno {
     public int getEdad() { return edad; }
 
     /**
+     * SECCIÓN: VALIDACIÓN CON EXPRESIONES REGULARES (RegEx)
+     * @Pattern: Obliga a que el texto ingresado coincida exactamente con un patrón matemático.
+     * Desglose de la fórmula "[0-9]{4}":
+     * - [0-9]: Define un "rango". Solo acepta números del 0 al 9.
+     * - {4}: Es un "cuantificador". Exige que haya EXACTAMENTE 4 caracteres. Ni 3, ni 5.
+     * * COMPARACIÓN CON JAVA EE:
+     * En Java clásico, para lograr esto debías importar 'java.util.regex.Pattern', compilar la
+     * expresión, y evaluarla usando un objeto 'Matcher' dentro de un bloque if/else en tu
+     * Servlet. Spring MVC lo resuelve de forma declarativa con una sola línea.
+     */
+    @Pattern(regexp = "[0-9]{4}", message = "Solo se permiten 4 valores numéricos")
+    public String codigoPostal;
+
+    /**
      * SECCIÓN: VALIDACIÓN COMBINADA PARA CORREO ELECTRÓNICO
      * Aquí estamos apilando reglas. Spring Validator evaluará ambas anotaciones
      * en orden antes de dar el visto bueno para guardar el dato.
      * * @NotBlank: Asegura que el usuario no envíe la caja vacía o llena de espacios.
-     * @Email: Entra en acción solo si hay texto, verificando que contenga un
-     * formato válido (ejemplo@dominio.com).
+     * * @Email: Entra en acción solo si hay texto, verificando formato básico.
+     * * @Pattern: Fuerza un dominio público estricto solucionando la carencia del @Email.
+     * * Desglose de la fórmula ".*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}":
+     * - .* -> Permite cualquier texto antes del arroba.
+     * - @ -> Exige literalmente el símbolo arroba.
+     * - [a-zA-Z0-9.-]+ -> Exige el nombre del dominio (letras, números, guiones o puntos).
+     * - \\. -> Exige literalmente un punto (usamos doble barra para escapar el carácter en Java).
+     * - [a-zA-Z]{2,} -> Exige 2 o más letras al final (ej: .com, .ar).
      */
     @NotBlank(message = "El email es un campo obligatorio y no puede quedar en blanco")
     @Email(message = "El formato de email ingresado es incorrecto")
+    @Pattern(regexp=".*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}", message="El email debe contener un dominio válido (ej: .com, .ar)")
     public String getEmail() { return email; }
+
+    public String getCodigoPostal() { return codigoPostal; }
 
     public String getOptativa() { return optativa; }
     public String getCiudadEstudios() { return ciudadEstudios; }
@@ -67,6 +90,7 @@ public class Alumno {
     public void setApellido(String apellido) { this.apellido = apellido; }
     public void setEdad(int edad) { this.edad = edad; }
     public void setEmail(String email) { this.email = email; }
+    public void setCodigoPostal(String codigoPostal) { this.codigoPostal = codigoPostal; }
     public void setOptativa(String optativa) { this.optativa = optativa; }
     public void setCiudadEstudios(String ciudadEstudios) { this.ciudadEstudios = ciudadEstudios; }
     public void setIdiomasAlumno(String idiomasAlumno) { this.idiomasAlumno = idiomasAlumno; }

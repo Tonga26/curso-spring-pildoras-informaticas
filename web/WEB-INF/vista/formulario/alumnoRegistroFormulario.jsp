@@ -50,9 +50,14 @@
 
         <div class="campo-grupo">
             <b>E-mail:</b> <br>
-                <%-- AQUÍ CORREGIMOS EL ERROR: cambiamos path="edad" por path="email" --%>
             <form:input path="email"></form:input>
             <form:errors path="email" cssClass="error-validacion"></form:errors>
+        </div>
+
+        <div class="campo-grupo">
+            <b>Código Postal:</b> <br>
+            <form:input path="codigoPostal"></form:input>
+            <form:errors path="codigoPostal" cssClass="error-validacion"></form:errors>
         </div>
 
         <div class="campo-grupo">

@@ -42,6 +42,7 @@
         El alumno <b>${elAlumno.nombre} ${elAlumno.apellido}</b> se ha registrado con éxito.<br><br>
         <b>Edad:</b> ${elAlumno.edad} <br>
         <b>E-mail:</b> ${elAlumno.email} <br>
+        <b>Código Postal:</b> ${elAlumno.codigoPostal} <br>
         <b>Asignatura/s:</b> ${elAlumno.optativa} <br>
         <b>Ciudad:</b> ${elAlumno.ciudadEstudios} <br>
         <b>Idiomas:</b> ${elAlumno.idiomasAlumno}
