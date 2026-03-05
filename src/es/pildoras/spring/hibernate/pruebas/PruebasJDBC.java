@@ -1,4 +1,4 @@
-package es.pildoras.spring.hibernate;
+package es.pildoras.spring.hibernate.pruebas;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
