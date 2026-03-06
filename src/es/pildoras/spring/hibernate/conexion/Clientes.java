@@ -38,11 +38,17 @@ public class Clientes {
     /*
      * @Id: Le indica a Hibernate que este atributo es la Clave Primaria (Primary Key).
      * @Column: Vincula este atributo de Java con el nombre de la columna en la BD.
-     * (Nota: Si tu base de datos tiene auto-incremento, pronto verás que Juan le
-     * agregará la anotación @GeneratedValue a este campo).
      */
     @Id
     @Column(name="id")
+    /*
+     * @GeneratedValue: Le delega a la base de datos la responsabilidad de generar el ID.
+     * strategy = GenerationType.IDENTITY: Es la estrategia específica para bases de
+     * datos que soportan campos autoincrementables (como MySQL).
+     * Le dice a Hibernate: "No calcules el ID tú. Inserta el registro y confía en
+     * el AUTO_INCREMENT de MySQL, luego recupera el ID generado".
+     */
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name="nombre")
