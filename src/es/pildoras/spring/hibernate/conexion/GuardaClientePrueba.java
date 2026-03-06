@@ -28,7 +28,7 @@ public class GuardaClientePrueba {
          */
         SessionFactory miFactory = new Configuration()
                 .configure("hibernate.cfg.xml")
-                .addAnnotatedClass(Clientes.class)
+                .addAnnotatedClass(Cliente.class)
                 .buildSessionFactory();
 
         // =====================================================================
@@ -40,7 +40,7 @@ public class GuardaClientePrueba {
             // =================================================================
             // PASO 3: CREAR EL OBJETO JAVA (LA ENTIDAD)
             // =================================================================
-            Clientes cliente1 = new Clientes("Sandra", "Delgado", "Goya");
+            Cliente cliente1 = new Cliente("Sandra", "Delgado", "Goya");
 
             // =================================================================
             // PASO 4: INICIAR LA TRANSACCIÓN PARA GUARDAR
@@ -79,7 +79,7 @@ public class GuardaClientePrueba {
             // - La clase de la entidad que queremos mapear (Clientes.class)
             // - La clave primaria o ID que queremos buscar en la tabla.
             // Devuelve un objeto Java completamente poblado con los datos de la BD.
-            Clientes clienteInsertado = miSession.get(Clientes.class, cliente1.getId());
+            Cliente clienteInsertado = miSession.get(Cliente.class, cliente1.getId());
 
             // 3. Imprimimos el objeto por consola.
             // Al haber sobrescrito el método toString() en la clase Clientes,

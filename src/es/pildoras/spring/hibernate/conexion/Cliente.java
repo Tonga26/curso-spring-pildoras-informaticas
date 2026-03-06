@@ -29,7 +29,7 @@ import javax.persistence.*;
  * esta anotación sería opcional, pero es buena práctica ponerla siempre para evitar errores.
  */
 @Table(name="clientes")
-public class Clientes {
+public class Cliente {
 
     // =========================================================================
     // SECCIÓN: ATRIBUTOS Y MAPEO DE COLUMNAS
@@ -71,7 +71,7 @@ public class Clientes {
      * objeto vacío usando este constructor, y luego usa los "Setters" o Reflection
      * para rellenar los datos. Si lo borras, la aplicación fallará.
      */
-    public Clientes() {
+    public Cliente() {
     }
 
     /**
@@ -80,7 +80,7 @@ public class Clientes {
      * Fíjate que NO incluimos el 'id'. Esto es porque el 'id' suele ser generado
      * automáticamente por la base de datos (Auto Increment) al momento de guardar.
      */
-    public Clientes(String nombre, String apellido, String direccion) {
+    public Cliente(String nombre, String apellido, String direccion) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.direccion = direccion;
