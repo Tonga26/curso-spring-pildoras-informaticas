@@ -1,8 +1,5 @@
 package es.pildoras.spring.hibernate.conexion;
 
-// =========================================================================
-// IMPORTS DEL FRAMEWORK
-// =========================================================================
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -11,6 +8,13 @@ import org.hibernate.cfg.Configuration;
  * SECCIÓN: ACTUALIZACIÓN DE REGISTROS (UPDATE)
  * Esta clase demuestra las dos formas principales de modificar datos
  * que ya existen en nuestra base de datos usando la magia del ORM.
+ * * * COMPARACIÓN CON JAVA EE (JDBC PURO):
+ * - En JDBC: Para actualizar un cliente, tendrías que abrir un PreparedStatement,
+ * escribir "UPDATE clientes SET nombre = ? WHERE id = ?", pasarle los parámetros
+ * con `stmt.setString(1, "Juan")`, manejar excepciones SQL, y luego ejecutar.
+ * - En Hibernate: Simplemente cambias el atributo del objeto en memoria con un
+ * setter normal de Java (miCliente.setNombre("Juan")) y el framework deduce
+ * y ejecuta el SQL por ti al hacer commit. ¡Adiós a los queries manuales!
  */
 public class ActualizaClientes {
 
@@ -27,9 +31,9 @@ public class ActualizaClientes {
         Session miSession = miFactory.openSession();
 
         try {
-            // =================================================================
-            // OPCIÓN 1: ACTUALIZACIÓN MEDIANTE SETTERS (EL MÉTODO "MÁGICO")
-            // =================================================================
+            // ===================================================
+            // OPCIÓN 1: ACTUALIZACIÓN INDIVIDUAL MEDIANTE SETTERS
+            // ===================================================
             /*
              * ¿Cómo funciona?
              * Al buscar un registro con .get() dentro de una transacción, el objeto
@@ -71,7 +75,6 @@ public class ActualizaClientes {
             miSession.beginTransaction();
 
             // 2. Ejecutamos el UPDATE con HQL
-            // CORRECCIÓN: Usamos 'Cliente' (nombre de tu clase Java) y no 'clientes'.
             // El método .executeUpdate() se usa siempre que hacemos UPDATE o DELETE.
             miSession.createQuery("UPDATE Cliente SET apellido='Dominguez' WHERE apellido LIKE 'D%'").executeUpdate();
 
