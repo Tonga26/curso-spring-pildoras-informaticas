@@ -1,8 +1,5 @@
 package es.pildoras.spring.hibernate.conexion;
 
-// =========================================================================
-// IMPORTS: Estrictamente del ecosistema org.hibernate
-// =========================================================================
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -56,7 +53,7 @@ public class GuardaClientePrueba {
             // PASO 6: CONFIRMAR LA TRANSACCIÓN (COMMIT)
             // =================================================================
             // Al hacer commit, la inserción se ejecuta en MySQL.
-            // ¡MAGIA ORM!: Hibernate detecta el ID autogenerado en la base de datos
+            // Hibernate detecta el ID autogenerado en la base de datos
             // y automáticamente actualiza la variable 'cliente1' inyectándole ese ID.
             miSession.getTransaction().commit();
 

@@ -1,13 +1,9 @@
 package es.pildoras.spring.hibernate.conexion;
 
-// =========================================================================
-// IMPORTS DEL FRAMEWORK Y JAVA
-// =========================================================================
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-// Importamos la interfaz List del framework de Colecciones de Java.
 import java.util.List;
 
 /**
@@ -18,10 +14,6 @@ import java.util.List;
  */
 public class ConsultaClientes {
 
-    /**
-     * Método main: Punto de entrada de la aplicación.
-     * @param args Argumentos de línea de comandos (no utilizados aquí).
-     */
     public static void main (String[] args){
 
         // =====================================================================
@@ -95,16 +87,10 @@ public class ConsultaClientes {
      * Método: recorreClientesConsultados
      * Propósito: Evita la repetición de código (Principio DRY) al momento de
      * imprimir en consola los resultados de las consultas HQL.
-     * * Modificadores:
-     * - private: Solo puede ser usado dentro de esta clase 'ConsultaClientes'.
-     * - static: Necesario para poder ser llamado desde el método 'main' que también es static.
-     * - void: No devuelve ningún valor, solo ejecuta una acción (imprimir).
      * * @param losClientes Un objeto de tipo List que contiene instancias de la clase Cliente.
      */
     private static void recorreClientesConsultados(List<Cliente> losClientes) {
-        // Bucle for-each: Por cada objeto 'cliente' dentro de la lista 'losClientes'...
         for (Cliente cliente : losClientes){
-            // ...imprimimos el objeto (esto llama automáticamente al método toString() de Cliente)
             System.out.println(cliente);
         }
     }
