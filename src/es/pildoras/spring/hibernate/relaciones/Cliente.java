@@ -11,9 +11,6 @@ import javax.persistence.*;
 @Table(name="cliente")
 public class Cliente {
 
-    // =========================================================================
-    // MAPEO DE COLUMNAS SIMPLES
-    // =========================================================================
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +42,6 @@ public class Cliente {
     @JoinColumn(name = "id")
     private DetallesCliente detallesCliente;
 
-    // =========================================================================
-    // CONSTRUCTORES
-    // =========================================================================
     public Cliente() {
     }
 
@@ -57,9 +51,6 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    // =========================================================================
-    // GETTERS Y SETTERS
-    // =========================================================================
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -75,9 +66,6 @@ public class Cliente {
     public DetallesCliente getDetallesCliente() { return detallesCliente; }
     public void setDetallesCliente(DetallesCliente detallesCliente) { this.detallesCliente = detallesCliente; }
 
-    // =========================================================================
-    // MÉTODOS AUXILIARES
-    // =========================================================================
     @Override
     public String toString() {
         return "Cliente{" +

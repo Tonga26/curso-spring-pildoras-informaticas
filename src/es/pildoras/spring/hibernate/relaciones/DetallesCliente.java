@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 /**
  * SECCIÓN: ENTIDAD SECUNDARIA (DEPENDIENTE)
- * Esta clase mapea la tabla 'detalles_cliente'. En s una relación
+ * Esta clase mapea la tabla 'detalles_cliente'. Es una relación
  * unidireccional (El Cliente conoce sus Detalles, pero los detalles
  * no saben a qué Cliente pertenecen en el código Java).
  */
