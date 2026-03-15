@@ -1,8 +1,5 @@
 package es.pildoras.spring.hibernate.relaciones;
 
-// =========================================================================
-// IMPORTS DEL FRAMEWORK
-// =========================================================================
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -34,8 +31,8 @@ public class InsertaCliente {
             // =================================================================
             // PASO 2: CREAR LOS OBJETOS INDEPENDIENTES EN MEMORIA
             // =================================================================
-            Cliente cliente1 = new Cliente("Sandra", "Delgado", "Goya");
-            DetallesCliente detallesCliente1 = new DetallesCliente("www.pildorasinformaticas.es", "546456456", "Primer Cliente");
+            Cliente cliente1 = new Cliente("Paco", "Gómez", "San Martín");
+            DetallesCliente detallesCliente1 = new DetallesCliente("www.pildorasinformaticas.es", "1189765572", "Segundo Cliente");
 
             // =================================================================
             // PASO 3: ESTABLECER LA RELACIÓN (EL PUENTE JAVA)
