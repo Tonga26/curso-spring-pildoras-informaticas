@@ -3,10 +3,10 @@ package es.pildoras.spring.hibernate.relaciones;
 import javax.persistence.*;
 
 /**
- * SECCIÓN: ENTIDAD SECUNDARIA (DEPENDIENTE)
- * Esta clase mapea la tabla 'detalles_cliente'. Es una relación
- * unidireccional (El Cliente conoce sus Detalles, pero los detalles
- * no saben a qué Cliente pertenecen en el código Java).
+ * SECCIÓN: ENTIDAD SECUNDARIA (DEPENDIENTE) - VERSIÓN BIDIRECCIONAL
+ * Esta clase mapea la tabla 'detalles_cliente'.
+ * Es una relación BIDIRECCIONAL. Los detalles saben exactamente a qué
+ * Cliente pertenecen gracias al atributo 'elCliente'.
  */
 @Entity
 @Table(name="detalles_cliente")
@@ -25,6 +25,20 @@ public class DetallesCliente {
 
     @Column(name="comentarios")
     private String comentarios;
+
+    // =========================================================================
+    // MAPEO BIDIRECCIONAL (@OneToOne con mappedBy)
+    // =========================================================================
+    /*
+     * mappedBy = "detallesCliente": Esto le dice a Hibernate:
+     * "¡Oye! Yo NO soy el dueño de la Clave Foránea en la base de datos.
+     * Ve a buscar las reglas de conexión (@JoinColumn) a la clase 'Cliente',
+     * específicamente en su atributo llamado 'detallesCliente'".
+     * cascade = CascadeType.ALL: Sigue aplicando la cascada. Si borramos este
+     * Detalle, también se borrará el Cliente entero.
+     */
+    @OneToOne(mappedBy = "detallesCliente", cascade = CascadeType.ALL)
+    private Cliente elCliente; // El puente de regreso hacia el dueño
 
     public DetallesCliente() {
     }
@@ -46,6 +60,9 @@ public class DetallesCliente {
 
     public String getComentarios() { return comentarios; }
     public void setComentarios(String comentarios) { this.comentarios = comentarios; }
+
+    public Cliente getElCliente() { return elCliente; }
+    public void setElCliente(Cliente elCliente) { this.elCliente = elCliente; }
 
     @Override
     public String toString() {
