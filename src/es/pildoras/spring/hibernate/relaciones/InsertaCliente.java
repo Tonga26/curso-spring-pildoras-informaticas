@@ -5,20 +5,18 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 /**
- * SECCIÓN: INSERCIÓN CON RELACIONES 1 A 1 (CASCADA)
- * Esta clase demuestra el inmenso poder de la propiedad 'CascadeType.ALL'.
- * Nos permite guardar información en múltiples tablas de la base de datos
- * ejecutando una sola instrucción de guardado en Java.
+ * Clase ejecutable para probar la persistencia en cascada (CREATE).
+ * Demuestra la funcionalidad de CascadeType.ALL al guardar múltiples
+ * entidades relacionadas mediante una única instrucción de guardado en la sesión.
  */
 public class InsertaCliente {
 
+    /**
+     * Método principal de ejecución.
+     * @param args Argumentos de línea de comandos (no utilizados).
+     */
     public static void main (String[] args){
 
-        // =====================================================================
-        // PASO 1: CONFIGURAR LA FÁBRICA (MULTI-ENTIDAD)
-        // =====================================================================
-        // Apuntamos al archivo XML de relaciones y, registramos AMBAS clases
-        // con .addAnnotatedClass().
         SessionFactory miFactory = new Configuration()
                 .configure("hibernate-relaciones.cfg.xml")
                 .addAnnotatedClass(Cliente.class)
@@ -28,38 +26,19 @@ public class InsertaCliente {
         Session miSession = miFactory.openSession();
 
         try {
-            // =================================================================
-            // PASO 2: CREAR LOS OBJETOS INDEPENDIENTES EN MEMORIA
-            // =================================================================
+            // Instanciación de entidades transitorias (no persistidas aún)
             Cliente cliente1 = new Cliente("Paco", "Gómez", "San Martín");
             DetallesCliente detallesCliente1 = new DetallesCliente("www.pildorasinformaticas.es", "1189765572", "Segundo Cliente");
 
-            // =================================================================
-            // PASO 3: ESTABLECER LA RELACIÓN (EL PUENTE JAVA)
-            // =================================================================
-            // En este punto asociamos los objetos. Le decimos al cliente quién
-            // es su detalle. Esta es una relación unidireccional por ahora.
+            // Establece el enlace bidireccional en memoria
             cliente1.setDetallesCliente(detallesCliente1);
 
-            // Iniciamos la transacción para comunicarnos con MySQL
             miSession.beginTransaction();
 
-            // =================================================================
-            // PASO 4: GUARDAR EN LA BASE DE DATOS (CASCADE)
-            // =================================================================
-            /*
-             * Solo le estamos diciendo a Hibernate: "Guarda al cliente1".
-             * Pero como en la clase Cliente configuramos @OneToOne(cascade=ALL),
-             * Hibernate dice: "Espera, este cliente tiene un objeto Detalles adentro.
-             * Primero voy a insertar los detalles, tomaré su ID, y luego insertaré
-             * al cliente enlazándolo a ese ID".
-             * Todo esto ocurre con una sola línea de código en Java.
-             */
+            // Guarda la entidad principal. La cascada insertará automáticamente los detalles.
             miSession.save(cliente1);
 
-            // Confirmamos los INSERTs múltiples
             miSession.getTransaction().commit();
-
             System.out.println("Registro insertado correctamente en ambas tablas de la base de datos.");
 
         } finally {

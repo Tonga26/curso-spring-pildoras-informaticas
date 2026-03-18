@@ -13,8 +13,10 @@ CREATE TABLE `cliente` (
 -- Creamos la tabla secundaria
 CREATE TABLE `detalles_cliente` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `cliente_id` INT(11) UNIQUE,
     `web` VARCHAR(128) DEFAULT NULL,
     `telefono` VARCHAR(128) DEFAULT NULL,
     `comentarios` VARCHAR(128) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_cliente_detalle` FOREIGN KEY (`cliente_id`) REFERENCES `cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB;
