@@ -1,6 +1,8 @@
 package es.pildoras.spring.hibernate.relaciones;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * =========================================================================
@@ -52,6 +54,20 @@ public class Cliente {
      */
     @OneToOne(mappedBy = "elCliente", cascade = CascadeType.ALL)
     private DetallesCliente detallesCliente;
+
+    /**
+     * Relación Uno a Muchos bidireccional con Pedido.
+     * Un cliente puede tener múltiples pedidos asociados.
+     * La propiedad 'mappedBy' indica que el atributo 'cliente' en la clase
+     * Pedido es el dueño físico de la relación (posee la Clave Foránea 'cliente_id').
+     * La cascada excluye CascadeType.REMOVE para que al eliminar un cliente
+     * no se destruyan sus pedidos automáticamente.
+     */
+    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REFRESH})
+    private List<Pedido> pedidos;
 
     // =========================================================================
     // SECCIÓN: CONSTRUCTORES
@@ -133,5 +149,18 @@ public class Cliente {
                 "nombre='" + nombre + "', " +
                 "apellido='" + apellido + "', " +
                 "direccion='" + direccion + "'}";
+    }
+
+    /**
+     * Método de conveniencia para agregar un pedido a la lista del cliente
+     * y sincronizar automáticamente la relación bidireccional en memoria.
+     * Inicializa la lista si aún no existe (lazy initialization).
+     *
+     * @param elPedido El pedido a asociar con este cliente.
+     */
+    public void agregarPedidos(Pedido elPedido) {
+        if (pedidos == null) pedidos = new ArrayList<>();
+        pedidos.add(elPedido);
+        elPedido.setCliente(this);
     }
 }
