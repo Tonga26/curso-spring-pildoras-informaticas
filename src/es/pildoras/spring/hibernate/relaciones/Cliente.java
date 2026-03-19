@@ -52,7 +52,7 @@ public class Cliente {
      * Se omite {@code CascadeType.REMOVE} para que eliminar un cliente
      * no destruya sus pedidos en cascada.
      */
-    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.MERGE,
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = {CascadeType.MERGE,
             CascadeType.PERSIST,
             CascadeType.DETACH,
             CascadeType.REFRESH})
