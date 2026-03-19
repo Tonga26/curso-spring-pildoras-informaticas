@@ -5,63 +5,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * =========================================================================
- * SECCIÓN: ENTIDAD PRINCIPAL (LADO INVERSO DE LA RELACIÓN)
- * =========================================================================
- * Representa la entidad 'Cliente' mapeada a la tabla 'cliente' de la base de datos.
- * En esta arquitectura bidireccional, actúa como el lado inverso de la relación,
- * delegando el control de la Clave Foránea a la entidad DetallesCliente.
+ * Entidad JPA que representa un cliente del sistema, mapeada a la tabla 'cliente'.
+ *
+ * <p>Participa en dos relaciones bidireccionales:</p>
+ * <ul>
+ *   <li><b>Uno a Uno</b> con {@link DetallesCliente}: actúa como lado inverso
+ *       (usa {@code mappedBy}). El dueño físico de la Clave Foránea es {@link DetallesCliente}.</li>
+ *   <li><b>Uno a Muchos</b> con {@link Pedido}: actúa como lado inverso
+ *       (usa {@code mappedBy}). El dueño físico de la Clave Foránea es {@link Pedido}.</li>
+ * </ul>
+ *
+ * <p>En ambas relaciones se excluye {@code CascadeType.REMOVE} en el lado hijo
+ * para evitar eliminaciones accidentales en cascada.</p>
  */
 @Entity
-@Table(name="cliente")
+@Table(name = "cliente")
 public class Cliente {
 
-    // =========================================================================
-    // SECCIÓN: ATRIBUTOS DE CLASE Y MAPEO BÁSICO
-    // =========================================================================
-
-    /**
-     * Identificador único del cliente.
-     * Mapeado a la columna 'id'. Generado automáticamente por la base de datos.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    /** Nombre del cliente. Mapeado a la columna 'nombre'. */
-    @Column(name="nombre")
+    @Column(name = "nombre")
     private String nombre;
 
-    /** Apellido del cliente. Mapeado a la columna 'apellido'. */
-    @Column(name="apellido")
+    @Column(name = "apellido")
     private String apellido;
 
-    /** Dirección física del cliente. Mapeado a la columna 'direccion'. */
-    @Column(name="direccion")
+    @Column(name = "direccion")
     private String direccion;
 
-    // =========================================================================
-    // SECCIÓN: RELACIONES ORM
-    // =========================================================================
-
     /**
-     * Relación Uno a Uno bidireccional con DetallesCliente.
-     * La propiedad 'mappedBy' indica que el atributo 'elCliente' en la clase
-     * DetallesCliente es el dueño físico de la relación (posee la Clave Foránea).
-     * El 'CascadeType.ALL' asegura que las operaciones de persistencia,
-     * actualización y eliminación se propaguen a los detalles asociados.
+     * Relación Uno a Uno con {@link DetallesCliente}.
+     * {@code mappedBy = "elCliente"} indica que la Clave Foránea reside
+     * físicamente en la tabla 'detalles_cliente'.
+     * {@code CascadeType.ALL} propaga todas las operaciones, incluida la eliminación.
      */
     @OneToOne(mappedBy = "elCliente", cascade = CascadeType.ALL)
     private DetallesCliente detallesCliente;
 
     /**
-     * Relación Uno a Muchos bidireccional con Pedido.
-     * Un cliente puede tener múltiples pedidos asociados.
-     * La propiedad 'mappedBy' indica que el atributo 'cliente' en la clase
-     * Pedido es el dueño físico de la relación (posee la Clave Foránea 'cliente_id').
-     * La cascada excluye CascadeType.REMOVE para que al eliminar un cliente
-     * no se destruyan sus pedidos automáticamente.
+     * Relación Uno a Muchos con {@link Pedido}.
+     * {@code mappedBy = "cliente"} indica que la Clave Foránea 'cliente_id'
+     * reside físicamente en la tabla 'pedido'.
+     * Se omite {@code CascadeType.REMOVE} para que eliminar un cliente
+     * no destruya sus pedidos en cascada.
      */
     @OneToMany(mappedBy = "cliente", cascade = {CascadeType.MERGE,
             CascadeType.PERSIST,
@@ -69,92 +58,49 @@ public class Cliente {
             CascadeType.REFRESH})
     private List<Pedido> pedidos;
 
-    // =========================================================================
-    // SECCIÓN: CONSTRUCTORES
-    // =========================================================================
-
-    /**
-     * Constructor por defecto.
-     * Requerido por el estándar JPA/Hibernate para la instanciación mediante Reflection.
-     */
     public Cliente() {}
 
-    /**
-     * Constructor parametrizado para instanciar un Cliente sin ID (autogenerado).
-     * * @param nombre   Nombre del cliente.
-     * @param apellido Apellido del cliente.
-     * @param direccion Dirección del cliente.
-     */
     public Cliente(String nombre, String apellido, String direccion) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.direccion = direccion;
     }
 
-    // =========================================================================
-    // SECCIÓN: MÉTODOS ACCESORES (GETTERS Y SETTERS)
-    // =========================================================================
-
-    /** @return El identificador del cliente. */
     public int getId() { return id; }
-
-    /** @param id El nuevo identificador del cliente. */
     public void setId(int id) { this.id = id; }
 
-    /** @return El nombre del cliente. */
     public String getNombre() { return nombre; }
-
-    /** @param nombre El nuevo nombre del cliente. */
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    /** @return El apellido del cliente. */
     public String getApellido() { return apellido; }
-
-    /** @param apellido El nuevo apellido del cliente. */
     public void setApellido(String apellido) { this.apellido = apellido; }
 
-    /** @return La dirección del cliente. */
     public String getDireccion() { return direccion; }
-
-    /** @param direccion La nueva dirección del cliente. */
     public void setDireccion(String direccion) { this.direccion = direccion; }
 
-    /** @return El objeto DetallesCliente asociado a este cliente. */
     public DetallesCliente getDetallesCliente() { return detallesCliente; }
 
     /**
-     * Establece los detalles para este cliente y sincroniza la relación bidireccional.
-     * Inyecta automáticamente la referencia de este Cliente en el objeto DetallesCliente.
-     * * @param detallesCliente El objeto DetallesCliente a asociar, o null para desvincular.
+     * Establece los detalles del cliente y sincroniza la relación bidireccional en memoria.
+     * Al asignar el objeto, inyecta automáticamente la referencia inversa en
+     * {@link DetallesCliente#setElCliente(Cliente)}, manteniendo coherencia en ambos lados.
+     *
+     * @param detallesCliente El objeto a asociar, o {@code null} para desvincular.
      */
     public void setDetallesCliente(DetallesCliente detallesCliente) {
         this.detallesCliente = detallesCliente;
-        if(detallesCliente != null) {
+        if (detallesCliente != null) {
             detallesCliente.setElCliente(this);
         }
     }
 
-    // =========================================================================
-    // SECCIÓN: MÉTODOS AUXILIARES
-    // =========================================================================
+    public List<Pedido> getPedidos() { return pedidos; }
+    public void setPedidos(List<Pedido> pedidos) { this.pedidos = pedidos; }
 
     /**
-     * Representación en cadena del estado del objeto Cliente.
-     * Se omite el atributo detallesCliente para evitar excepciones de recursión infinita.
-     * * @return String con los datos del cliente.
-     */
-    @Override
-    public String toString() {
-        return "Cliente{id=" + id + ", " +
-                "nombre='" + nombre + "', " +
-                "apellido='" + apellido + "', " +
-                "direccion='" + direccion + "'}";
-    }
-
-    /**
-     * Método de conveniencia para agregar un pedido a la lista del cliente
-     * y sincronizar automáticamente la relación bidireccional en memoria.
-     * Inicializa la lista si aún no existe (lazy initialization).
+     * Agrega un pedido a la lista del cliente y sincroniza la relación bidireccional en memoria.
+     * Inicializa la lista si todavía es {@code null} (lazy initialization).
+     * Equivale a llamar manualmente a {@code pedidos.add(p)} y {@code p.setCliente(this)}.
      *
      * @param elPedido El pedido a asociar con este cliente.
      */
@@ -162,5 +108,17 @@ public class Cliente {
         if (pedidos == null) pedidos = new ArrayList<>();
         pedidos.add(elPedido);
         elPedido.setCliente(this);
+    }
+
+    /**
+     * Se omite {@code detallesCliente} y {@code pedidos} para evitar
+     * recursión infinita por la relación bidireccional.
+     */
+    @Override
+    public String toString() {
+        return "Cliente{id=" + id +
+                ", nombre='" + nombre + "'" +
+                ", apellido='" + apellido + "'" +
+                ", direccion='" + direccion + "'}";
     }
 }

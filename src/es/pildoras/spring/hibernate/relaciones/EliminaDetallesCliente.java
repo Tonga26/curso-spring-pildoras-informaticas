@@ -21,6 +21,7 @@ public class EliminaDetallesCliente {
                 .configure("hibernate-relaciones.cfg.xml")
                 .addAnnotatedClass(Cliente.class)
                 .addAnnotatedClass(DetallesCliente.class)
+                .addAnnotatedClass(Pedido.class)
                 .buildSessionFactory();
 
         Session miSession = miFactory.openSession();
