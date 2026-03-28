@@ -113,10 +113,10 @@
 
         <!--
             Le indica a Hibernate en qué paquete buscar las clases anotadas con @Entity.
-            Escanea "es.pildoras.spring.gestioncrud.entidad" y registra cada entidad
+            Escanea "es.pildoras.spring.gestioncrud.entity" y registra cada entidad
             encontrada como una tabla mapeada, sin necesidad de declararlas en un hbm.xml.
         -->
-        <property name="packagesToScan" value="es.pildoras.spring.gestioncrud.entidad" />
+        <property name="packagesToScan" value="es.pildoras.spring.gestioncrud.entity" />
 
         <!-- Propiedades nativas de Hibernate pasadas directamente al framework -->
         <property name="hibernateProperties">
