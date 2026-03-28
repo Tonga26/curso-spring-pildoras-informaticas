@@ -1,51 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    web.xml: Descriptor de despliegue de la aplicación web Java EE.
+    Es el punto de entrada de configuración para el contenedor de servlets (ej: Tomcat).
+    Aquí se definen filtros, servlets, mappings y otros comportamientos globales de la app.
+-->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-	id="WebApp_ID" version="3.1">
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         id="WebApp_ID" version="3.1">
+    <!-- version="3.1": indica que se usa la especificación Servlet 3.1 (Java EE 7) -->
 
-	<display-name>mvc ejemplo</display-name>
+    <!-- Nombre descriptivo de la aplicación, visible en herramientas de administración como la consola de Tomcat -->
+    <display-name>Proyecto_Global_Spring</display-name>
 
-	<absolute-ordering />
+    <!--
+        Deshabilita el escaneo automático de anotaciones y web fragments en JARs del classpath.
+        Sin este tag, Tomcat escanearía todos los JARs buscando @WebServlet, @WebFilter, etc.,
+        lo cual puede ser lento y causar conflictos. Al dejarlo vacío (<absolute-ordering />)
+        se indica que no hay ningún web-fragment.xml a ordenar, mejorando el tiempo de arranque.
+    -->
+    <absolute-ordering />
 
-	<!-- Configuracion del dispatcher servlet -->
-	<servlet>
-		<servlet-name>dispatcher</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring_mvc_servlet.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+    <!--
+        Define los archivos de bienvenida: cuando se accede a la raíz de la app sin especificar
+        un recurso (ej: http://localhost:8080/miapp/), el servidor busca estos archivos en orden
+        y sirve el primero que encuentre.
+    -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
 
-	<!-- Ubicacion URL del servlet -->
-	<servlet-mapping>
-		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+    <!-- ==================== FILTRO DE ENCODING ==================== -->
+    <!--
+        Filtro de Spring que fuerza la codificación de caracteres UTF-8 en todas las
+        peticiones y respuestas. Esto evita problemas con caracteres especiales
+        (tildes, ñ, etc.) en formularios y respuestas del servidor.
+    -->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <!-- Clase de Spring que implementa el filtro de encoding -->
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <!-- Establece UTF-8 como el charset a usar -->
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <!--
+                forceEncoding=true: aplica el encoding incluso si el cliente ya envió
+                uno diferente en la petición. Garantiza consistencia total.
+            -->
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <!-- Mapea el filtro de encoding para que intercepte TODAS las URLs de la aplicación -->
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <!-- ← CORREGIDO: </filter-mapping> estaba en esta misma línea en el original -->
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
+    <!-- ==================== RECURSOS ESTÁTICOS ==================== -->
+    <!--
+        Redirige las peticiones a /recursos/* al servlet "default" del contenedor (Tomcat).
+        El servlet default es el encargado de servir archivos estáticos (CSS, JS, imágenes, etc.)
+        directamente desde el sistema de archivos, sin pasar por Spring.
+        Así, por ejemplo, /recursos/estilos.css se sirve tal cual sin procesamiento MVC.
+    -->
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/recursos/*</url-pattern>
     </servlet-mapping>
 
-    <!-- Codificación UTF-8-->
-    <filter>
-        <filter-name>characterEncodingFilter</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <!-- ==================== DISPATCHER MVC ==================== -->
+    <!--
+        Define el DispatcherServlet principal para el módulo MVC del proyecto.
+        El DispatcherServlet es el "Front Controller" de Spring MVC: recibe todas las
+        peticiones de su URL pattern y las delega a los @Controllers correspondientes.
+    -->
+    <servlet>
+        <servlet-name>dispatcher-mvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
-            <param-name>encoding</param-name>
-            <param-value>UTF-8</param-value>
+            <!--
+                Le indica a este DispatcherServlet dónde está su archivo de configuración
+                de contexto Spring (beans, view resolvers, component-scan, etc.).
+                Cada DispatcherServlet tiene su propio contexto hijo independiente.
+            -->
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring_mvc_servlet.xml</param-value>
         </init-param>
-        <init-param>
-            <param-name>forceEncoding</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
+        <!--
+            load-on-startup=1: este servlet se inicializa al arrancar la aplicación
+            (no al recibir la primera petición). El número indica el orden de carga;
+            menor número = se carga antes.
+        -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- Todas las peticiones a /mvc/** serán manejadas por el DispatcherServlet MVC -->
+    <servlet-mapping>
+        <servlet-name>dispatcher-mvc</servlet-name>
+        <url-pattern>/mvc/*</url-pattern>
+    </servlet-mapping>
 
-    <filter-mapping>
-        <filter-name>characterEncodingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <!-- ==================== DISPATCHER CRUD ==================== -->
+    <!--
+        Segundo DispatcherServlet, dedicado al módulo CRUD del proyecto.
+        Tener dos DispatcherServlets permite separar contextos y responsabilidades:
+        cada uno carga su propio archivo XML con sus beans, controllers y configuración,
+        logrando así una arquitectura modular dentro de la misma aplicación.
+    -->
+    <servlet>
+        <servlet-name>dispatcher-crud</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <!-- Contexto Spring específico para el módulo CRUD -->
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring-crud-servlet.xml</param-value>
+        </init-param>
+        <!--
+            load-on-startup=2: se inicializa después del dispatcher-mvc (que tiene prioridad 1).
+        -->
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <!-- Todas las peticiones a /crud/** serán manejadas por el DispatcherServlet CRUD -->
+    <servlet-mapping>
+        <servlet-name>dispatcher-crud</servlet-name>
+        <url-pattern>/crud/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

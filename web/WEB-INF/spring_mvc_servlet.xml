@@ -1,38 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    spring_mvc_servlet.xml: Contexto de aplicación Spring para el módulo MVC.
+    Este archivo es cargado exclusivamente por el "dispatcher-mvc" definido en web.xml.
+    Aquí se configura todo lo necesario para que Spring MVC funcione: escaneo de
+    controllers, resolución de vistas, manejo de recursos estáticos y mensajes i18n.
+-->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans
-    	http://www.springframework.org/schema/beans/spring-beans.xsd
-    	http://www.springframework.org/schema/context
-    	http://www.springframework.org/schema/context/spring-context.xsd
-    	http://www.springframework.org/schema/mvc
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--
+        Declaración de namespaces XML:
+          - beans:   namespace base de Spring, permite definir <bean> genéricos.
+          - context: habilita el escaneo de componentes y anotaciones (@Component, @Controller, etc.).
+          - mvc:     habilita configuración específica de Spring MVC (@RequestMapping, recursos, etc.).
+        El xsi:schemaLocation empareja cada namespace con su XSD de validación,
+        lo que permite al IDE detectar errores de configuración en tiempo de edición.
+    -->
 
-	<!--  Paquete a escanear en busca de componentes -->
-	<context:component-scan base-package="es.pildoras.spring.mvc" />
+    <!-- ==================== ESCANEO DE COMPONENTES ==================== -->
+    <!--
+        Le indica a Spring que escanee recursivamente el paquete "es.pildoras.spring.mvc"
+        buscando clases anotadas con @Controller, @Service, @Repository, @Component, etc.
+        Las clases encontradas se registran automáticamente como beans en el contexto,
+        sin necesidad de declararlas manualmente con <bean>.
+        Solo se escanea este paquete (y sus subpaquetes), manteniendo el contexto limpio
+        y acotado al módulo MVC.
+    -->
+    <context:component-scan base-package="es.pildoras.spring.mvc" />
 
-	<mvc:annotation-driven/>
+    <!-- ==================== SOPORTE DE ANOTACIONES MVC ==================== -->
+    <!--
+        Activa la infraestructura completa de anotaciones de Spring MVC. Entre otras cosas:
+          - Habilita @RequestMapping, @GetMapping, @PostMapping en los controllers.
+          - Registra conversores de tipos (ej: String a Date, String a Integer).
+          - Activa la validación con @Valid y la integración con Bean Validation (JSR-303).
+          - Habilita @ResponseBody y @RequestBody para trabajar con JSON/XML.
+          - Registra HandlerMethodArgumentResolvers para inyectar parámetros en los métodos.
+        Sin esta línea, las anotaciones de Spring MVC no funcionarían correctamente.
+    -->
+    <mvc:annotation-driven/>
 
-	<!-- Configuración del view resolver-->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/vista/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+    <!-- ==================== RESOLUCIÓN DE VISTAS ==================== -->
+    <!--
+        El ViewResolver es el componente que traduce el nombre lógico de una vista
+        (el String que retorna un @Controller, ej: "home") en el recurso físico real.
+        InternalResourceViewResolver construye la ruta completa así:
+            prefix + nombre_lógico + suffix
+            /WEB-INF/vista/ + home + .jsp  →  /WEB-INF/vista/home.jsp
+        Las vistas se ubican dentro de /WEB-INF/ para que no sean accesibles
+        directamente desde el navegador (solo a través del DispatcherServlet).
+    -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- Carpeta base donde se ubican todos los archivos JSP de este módulo -->
+        <property name="prefix" value="/WEB-INF/vista/" />
+        <!-- Extensión de los archivos de vista; Spring la agrega automáticamente al nombre lógico -->
+        <property name="suffix" value=".jsp" />
+    </bean>
 
-    <!-- Configuración del mensaje de error personalizado -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <!-- ==================== FUENTE DE MENSAJES (i18n) ==================== -->
+    <!--
+        Define el bean "messageSource", que Spring usa automáticamente para resolver
+        mensajes de texto externalizados. Sirve para:
+          - Mensajes de error de validación personalizados (ej: "El campo es obligatorio").
+          - Internacionalización (i18n): mostrar textos en distintos idiomas según el locale.
+        ResourceBundleMessageSource busca archivos .properties en el classpath.
+        Con basenames="resources/messages", buscará:
+          - resources/messages.properties        (idioma por defecto)
+          - resources/messages_es.properties     (español)
+          - resources/messages_en.properties     (inglés), etc.
+        El id="messageSource" es obligatorio: Spring lo detecta por ese nombre específico.
+    -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames" value="resources/messages"></property>
     </bean>
 
+    <!-- ==================== RECURSOS ESTÁTICOS ==================== -->
+    <!--
+        Configura Spring MVC para servir archivos estáticos (CSS, JS, imágenes, fuentes, etc.)
+        sin que pasen por los @Controllers.
+          - mapping="/recursos/**": cualquier URL que empiece con /recursos/ activa este handler.
+          - location="/recursos/":  Spring busca esos archivos en la carpeta /recursos/ de la webapp.
+        Esto complementa lo definido en web.xml (servlet default para /recursos/*),
+        permitiendo que Spring también resuelva correctamente los recursos cuando las
+        peticiones llegan a través del DispatcherServlet MVC.
+    -->
     <mvc:resources location="/recursos/" mapping="/recursos/**"></mvc:resources>
 
 </beans>
-
-
-
-
-

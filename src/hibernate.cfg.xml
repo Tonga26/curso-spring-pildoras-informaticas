@@ -1,12 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<!--
+    hibernate.cfg.xml: Archivo de configuración nativa de Hibernate.
+    A diferencia del proyecto CRUD (donde Hibernate era configurado por Spring
+    a través de LocalSessionFactoryBean en el XML de Spring), este archivo
+    es usado cuando Hibernate se configura de forma standalone, es decir,
+    sin Spring como intermediario.
+    La SessionFactory se construye directamente en el código Java así:
+        SessionFactory sf = new Configuration().configure().buildSessionFactory();
+    Hibernate busca este archivo en la raíz del classpath por defecto.
+-->
+
+<!--
+    DOCTYPE: declara que este XML sigue el DTD (Document Type Definition)
+    de configuración de Hibernate 3.0. El DTD define qué elementos y atributos
+    son válidos dentro de este archivo, permitiendo validación en el IDE.
+-->
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
 <hibernate-configuration>
+
+    <!--
+        <session-factory>: bloque principal de configuración.
+        Agrupa todas las propiedades que Hibernate usará para construir
+        la SessionFactory, el objeto central del ORM que gestiona:
+          - Las conexiones a la base de datos.
+          - El mapeo entre clases Java (@Entity) y tablas de la BD.
+          - El ciclo de vida de las sesiones (Session) y transacciones.
+        La SessionFactory es thread-safe y debe existir una sola instancia
+        por base de datos durante toda la vida de la aplicación.
+    -->
     <session-factory>
+
+        <!-- ==================== CONEXIÓN A LA BASE DE DATOS ==================== -->
+
+        <!-- Driver JDBC que Hibernate usará para comunicarse con MySQL -->
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/pruebashibernate?useSSL=false&amp;serverTimezone=UTC</property>
+
+        <!--
+            URL JDBC de conexión a la base de datos:
+              - localhost:3306      → servidor MySQL local en el puerto por defecto
+              - pruebashibernate   → nombre de la base de datos a utilizar
+              - useSSL=false       → deshabilita SSL (apropiado para entorno de desarrollo)
+              - serverTimezone=UTC → evita errores de zona horaria con el driver moderno
+            Nota: &amp; es la codificación XML del caracter '&' que separa los parámetros.
+        -->
+        <property name="connection.url">
+            jdbc:mysql://localhost:3306/pruebashibernate?useSSL=false&amp;serverTimezone=UTC
+        </property>
+
+        <!-- Usuario de la base de datos con el que Hibernate abrirá las conexiones -->
         <property name="connection.username">root</property>
+
+        <!-- Contraseña del usuario (vacía en este caso, típico de entorno local de desarrollo) -->
         <property name="connection.password"></property>
+
+        <!-- ==================== CONFIGURACIÓN DE HIBERNATE ==================== -->
+
+        <!--
+            Dialecto SQL que Hibernate debe usar para generar las sentencias SQL.
+            MySQL5Dialect adapta el SQL generado a la sintaxis de MySQL 5.x:
+            tipos de datos nativos, funciones específicas, estrategia de paginación, etc.
+            Nota: para MySQL 8+ sería preferible usar MySQLDialect o MySQL8Dialect
+            para aprovechar las características más modernas del motor.
+        -->
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+        <!--
+            Imprime en consola cada sentencia SQL que Hibernate genera y ejecuta.
+            Imprescindible durante el desarrollo para verificar qué queries
+            se están lanzando realmente contra la base de datos.
+            Debe desactivarse (false) en producción por razones de rendimiento
+            y para evitar exponer información sensible en los logs.
+        -->
         <property name="hibernate.show_sql">true</property>
+
     </session-factory>
+
 </hibernate-configuration>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    spring-crud-servlet.xml: Contexto de aplicación Spring para el módulo CRUD.
+    Es cargado exclusivamente por el "dispatcher-crud" definido en web.xml.
+    A diferencia del contexto MVC simple, este archivo agrega la capa de persistencia
+    completa: conexión a base de datos (c3p0), ORM con Hibernate y gestión de transacciones.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--
+        Namespaces adicionales respecto al contexto MVC:
+          - tx: habilita la configuración de transacciones declarativas,
+                permitiendo usar <tx:annotation-driven> y la anotación @Transactional.
+        Los demás (beans, context, mvc) cumplen el mismo rol que en spring_mvc_servlet.xml.
+    -->
+
+    <!-- ==================== ESCANEO DE COMPONENTES ==================== -->
+    <!--
+        Escanea el paquete "es.pildoras.spring.gestioncrud" y sus subpaquetes
+        en busca de clases anotadas (@Controller, @Service, @Repository, @Component).
+        Es el mecanismo que permite que Spring descubra y registre automáticamente
+        los controllers, servicios y DAOs del módulo CRUD sin declararlos manualmente.
+    -->
+    <context:component-scan base-package="es.pildoras.spring.gestioncrud" />
+
+    <!-- ==================== SOPORTE DE ANOTACIONES MVC ==================== -->
+    <!--
+        Activa toda la infraestructura de anotaciones de Spring MVC:
+        @RequestMapping, @GetMapping, conversores de tipos, validación con @Valid, etc.
+        Imprescindible para que los @Controllers del módulo CRUD procesen peticiones HTTP.
+    -->
+    <mvc:annotation-driven/>
+
+    <!-- ==================== RESOLUCIÓN DE VISTAS ==================== -->
+    <!--
+        Traduce el nombre lógico que retorna un @Controller en la ruta física del JSP:
+            /WEB-INF/view/ + nombre_lógico + .jsp
+        Ejemplo: si el controller retorna "listar", Spring busca /WEB-INF/view/listar.jsp.
+        Nota: este módulo usa la carpeta "view/" mientras que el MVC usa "vista/",
+        manteniendo las vistas de cada módulo separadas e independientes.
+    -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- ==================== POOL DE CONEXIONES (c3p0) ==================== -->
+    <!--
+        Define el DataSource usando c3p0, una librería de connection pooling.
+        En lugar de abrir y cerrar una conexión a la BD por cada petición (costoso),
+        c3p0 mantiene un pool de conexiones reutilizables, mejorando el rendimiento.
+        destroy-method="close": cuando Spring cierra el contexto, el pool se cierra
+        correctamente liberando todas las conexiones activas.
+    -->
+    <bean id="myDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+
+        <!-- Driver JDBC de MySQL (versión moderna con soporte de timezone) -->
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver" />
+
+        <!--
+            URL de conexión a la base de datos MySQL:
+              - localhost:3306       → servidor y puerto local por defecto de MySQL
+              - gestionpedidoscrud  → nombre de la base de datos a usar
+              - useSSL=false        → deshabilita SSL (adecuado para desarrollo local)
+              - serverTimezone=UTC  → evita errores de zona horaria con el driver moderno
+            Nota: &amp; es la codificación XML del caracter '&' que separa los parámetros.
+        -->
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/gestionpedidoscrud?useSSL=false&amp;serverTimezone=UTC" />
+
+        <!-- Credenciales de acceso a la base de datos -->
+        <property name="user" value="root" />
+        <property name="password" value="" />
+
+        <!-- Número mínimo de conexiones que el pool mantiene abiertas siempre -->
+        <property name="minPoolSize" value="5" />
+        <!-- Número máximo de conexiones simultáneas que el pool puede crear -->
+        <property name="maxPoolSize" value="20" />
+        <!--
+            Tiempo máximo (en milisegundos) que una conexión puede estar inactiva
+            antes de ser cerrada y eliminada del pool. 30000 ms = 30 segundos.
+        -->
+        <property name="maxIdleTime" value="30000" />
+        <!-- Tiempo máximo (ms) que c3p0 espera para obtener una conexión antes de lanzar excepción -->
+        <property name="checkoutTimeout" value="5000" />
+        <!-- Cantidad de reintentos antes de rendirse -->
+        <property name="acquireRetryAttempts" value="3" />
+    </bean>
+
+    <!-- ==================== SESSION FACTORY (Hibernate) ==================== -->
+    <!--
+        LocalSessionFactoryBean es el puente entre Spring e Hibernate.
+        Crea y configura la SessionFactory de Hibernate, que es el objeto central
+        del ORM: gestiona el ciclo de vida de las sesiones y el mapeo objeto-relacional.
+        Spring la administra como un bean singleton para que sea compartida en toda la app.
+    -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+        <!-- Le inyecta el DataSource (pool c3p0) para que Hibernate obtenga conexiones de él -->
+        <property name="dataSource" ref="myDataSource" />
+
+        <!--
+            Le indica a Hibernate en qué paquete buscar las clases anotadas con @Entity.
+            Escanea "es.pildoras.spring.gestioncrud.entidad" y registra cada entidad
+            encontrada como una tabla mapeada, sin necesidad de declararlas en un hbm.xml.
+        -->
+        <property name="packagesToScan" value="es.pildoras.spring.gestioncrud.entidad" />
+
+        <!-- Propiedades nativas de Hibernate pasadas directamente al framework -->
+        <property name="hibernateProperties">
+            <props>
+                <!--
+                    Dialecto SQL que Hibernate debe usar para generar queries.
+                    MySQLDialect adapta el SQL generado a la sintaxis específica de MySQL
+                    (tipos de datos, funciones, paginación, etc.).
+                -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+                <!--
+                    show_sql=true: imprime en consola cada sentencia SQL que Hibernate
+                    ejecuta. Muy útil en desarrollo para depurar consultas; debe
+                    desactivarse en producción por razones de rendimiento y seguridad.
+                -->
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- ==================== GESTOR DE TRANSACCIONES ==================== -->
+    <!--
+        Define el Transaction Manager que Spring usará para gestionar las transacciones
+        de base de datos. HibernateTransactionManager coordina las transacciones
+        de Hibernate con el sistema de transacciones de Spring, permitiendo usar
+        @Transactional en servicios y DAOs para delimitar unidades de trabajo atómicas.
+        Se le inyecta la sessionFactory para que pueda obtener y controlar las sesiones
+        de Hibernate dentro de cada transacción.
+    -->
+    <bean id="miTransactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- ==================== TRANSACCIONES DECLARATIVAS ==================== -->
+    <!--
+        Activa el soporte para la anotación @Transactional en los beans de este contexto.
+        A partir de esta línea, cualquier método o clase anotado con @Transactional
+        será interceptado por un proxy de Spring que:
+          1. Abre una transacción antes de ejecutar el método.
+          2. Hace commit si el método termina correctamente.
+          3. Hace rollback automáticamente si se lanza una RuntimeException.
+        transaction-manager="miTransactionManager": le indica qué gestor de transacciones
+        usar (el HibernateTransactionManager definido justo arriba).
+    -->
+    <tx:annotation-driven transaction-manager="miTransactionManager" />
+</beans>

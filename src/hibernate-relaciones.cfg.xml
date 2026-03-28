@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<!--
+    hibernate.cfg.xml: Configuración standalone de Hibernate para el módulo
+    de RELACIONES entre entidades.
+    Mismo enfoque que el archivo de "pruebashibernate": Hibernate configurado
+    directamente sin Spring, SessionFactory construida manualmente en el código.
+    La única diferencia respecto al anterior es la base de datos apuntada.
+-->
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
 <hibernate-configuration>
     <session-factory>
+
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/relacioneshibernate?useSSL=false&amp;serverTimezone=UTC</property>
+
+        <!--
+            *** ÚNICA DIFERENCIA respecto al hibernate.cfg.xml anterior ***
+            Base de datos: "relacioneshibernate" en lugar de "pruebashibernate".
+            Esto sugiere que este archivo pertenece a un proyecto o módulo dedicado
+            específicamente a practicar/demostrar las relaciones entre entidades
+            en Hibernate: @OneToOne, @OneToMany, @ManyToOne, @ManyToMany.
+            Cada proyecto apunta a su propia BD para mantener los datos aislados.
+        -->
+        <property name="connection.url">
+            jdbc:mysql://localhost:3306/relacioneshibernate?useSSL=false&amp;serverTimezone=UTC
+        </property>
+
         <property name="connection.username">root</property>
         <property name="connection.password"></property>
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
         <property name="hibernate.show_sql">true</property>
+
     </session-factory>
 </hibernate-configuration>
