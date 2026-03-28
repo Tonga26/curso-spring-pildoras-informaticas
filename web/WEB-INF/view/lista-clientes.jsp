@@ -32,7 +32,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Directorio de Clientes</h2>
 
-            <a href="#" class="btn btn-success">
+            <a href="muestraFormularioAgregar" class="btn btn-success">
                 <i class="fa-solid fa-plus"></i> Agregar Cliente
             </a>
         </div>
