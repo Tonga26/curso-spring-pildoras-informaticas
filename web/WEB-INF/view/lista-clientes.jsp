@@ -12,26 +12,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <style>
-        /* 'body': Seleccionamos el cuerpo de la página para darle un color de fondo gris muy suave */
-        body {
-            background-color: #f8f9fa;
-        }
-
-        /* '.table-hover tbody tr:hover': Pseudo-clase que indica que, cuando el puntero del mouse
-           pase sobre una fila de la tabla, esta cambiará sutilmente a un tono gris un poco más oscuro */
-        .table-hover tbody tr:hover {
-            background-color: #f1f3f5;
-        }
-
-        /* '.card': A nuestro contenedor principal le daremos una sombra suave y bordes redondeados
-           para que parezca que flota sobre el fondo */
-        .card {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            border: none;
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/recursos/estilos/estilos.css">
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark mb-4">

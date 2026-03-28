@@ -164,4 +164,7 @@
         usar (el HibernateTransactionManager definido justo arriba).
     -->
     <tx:annotation-driven transaction-manager="miTransactionManager" />
+
+    <!-- Especificar directorio de recursos -->
+    <mvc:resources location="/recursos/" mapping="/recursos/**" ></mvc:resources>
 </beans>
