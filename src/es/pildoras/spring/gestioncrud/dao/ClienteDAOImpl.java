@@ -38,7 +38,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         return clientes;
     }
 
-    // MÉTODO guardarCliente (antes insertarCliente): Implementa la escritura (Upsert).
+    // MÉTODO guardarCliente: Implementa la escritura (Upsert).
     @Override
     @Transactional
     public void guardarCliente(Cliente elCliente) {
@@ -64,5 +64,22 @@ public class ClienteDAOImpl implements ClienteDAO {
         // 2. Usamos el método .get() de Hibernate.
         // Le pasamos la clase que queremos mapear (Cliente.class) y la clave primaria (id).
         return miSession.get(Cliente.class, id);
+    }
+
+    // MÉTODO eliminarCliente: Implementa la destrucción del registro usando el camino del Objeto.
+    // ANOTACIÓN @Transactional: ¡Crucial! Requerido para cualquier operación que modifique la BD.
+    @Override
+    @Transactional
+    public void eliminarCliente(int id) {
+
+        // 1. Obtenemos la conexión actual a la base de datos.
+        Session miSession = sessionFactory.getCurrentSession();
+
+        // 2. Buscamos el objeto en la base de datos para traerlo a la memoria.
+        Cliente clienteABorrar = miSession.get(Cliente.class, id);
+
+        // 3. Utilizamos el método .delete() de Hibernate para destruir el objeto.
+        // Al finalizar el método, Spring hace Commit y genera el: "DELETE FROM cliente WHERE id = ?"
+        miSession.delete(clienteABorrar);
     }
 }

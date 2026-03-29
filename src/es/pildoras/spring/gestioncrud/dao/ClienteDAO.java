@@ -15,4 +15,7 @@ public interface ClienteDAO {
 
     // MÉTODO getClienteById: Busca un registro específico utilizando su clave primaria.
     Cliente getClienteById(int id);
+
+    // MÉTODO eliminarCliente: Destruye un registro en la base de datos usando su clave primaria.
+    void eliminarCliente(int id);
 }

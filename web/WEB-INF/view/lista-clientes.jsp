@@ -58,12 +58,17 @@
                     <%--
                     Construimos la ruta de forma dinámica para cada cliente de la lista.
                      --%>
+                    <%-- Link para actualizar --%>
                     <c:url var="linkActualizar" value="/crud/cliente/muestraFormularioActualizar">
-
                         <%-- Inyectamos el ID del cliente actual en la URL --%>
                         <%-- Spring y el navegador construyen una URL con este formato al final,
                         por ejemplo: .../muestraFormularioActualizar?clienteId=5
                         Ese signo de interrogación (?) significa que empieza el envío de variables --%>
+                        <c:param name="clienteId" value="${cliente.id}" />
+                    </c:url>
+
+                    <%-- Link para eliminar --%>
+                    <c:url var="linkEliminar" value="/crud/cliente/eliminar">
                         <c:param name="clienteId" value="${cliente.id}" />
                     </c:url>
 
@@ -82,7 +87,7 @@
                                 <i class="fa-solid fa-pen-to-square"></i> Editar
                             </a>
 
-                            <a href="#" class="btn btn-danger btn-sm ms-1">
+                            <a href="#" class="btn btn-danger btn-sm ms-1" onclick="confirmarEliminacion(event, '${linkEliminar}')">
                                 <i class="fa-solid fa-trash"></i> Eliminar
                             </a>
                         </td>
@@ -95,5 +100,30 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmarEliminacion(evento, urlDestino) {
+        // Evitamos que el enlace haga algo por defecto
+        evento.preventDefault();
+
+        // Lanzamos la alerta moderna
+        Swal.fire({
+            title: '¿Estás completamente seguro?',
+            text: "¡No podrás revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, ¡elimínalo!',
+            cancelButtonText: 'Cancelar'
+        }).then((resultado) => {
+            // Si el usuario hizo clic en "Sí"
+            if (resultado.isConfirmed) {
+                // Redirigimos manualmente a la URL de Spring
+                window.location.href = urlDestino;
+            }
+        });
+    }
+</script>
 </body>
 </html>

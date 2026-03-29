@@ -78,4 +78,19 @@ public class Controlador {
         // 3. Reutilizamos exactamente el mismo archivo JSP que usamos para agregar.
         return "formulario-cliente";
     }
+
+    // MÉTODO eliminarCliente: Atrapa el clic del botón "Eliminar" (después de la confirmación JS).
+    // ANOTACIÓN @GetMapping: Atrapa la petición enviada por window.location.href desde el Frontend.
+    @GetMapping("/eliminar")
+    public String eliminarCliente(
+            // @RequestParam: Extrae el número de ID de la URL (ej. ?clienteId=5)
+            @RequestParam("clienteId") int id){
+
+        // 1. Enviamos la orden de destrucción al DAO pasándole la clave primaria.
+        clienteDAO.eliminarCliente(id);
+
+        // 2. PATRÓN REDIRECT: Volvemos a solicitar la lista actualizada.
+        // Así, el usuario verá inmediatamente que la fila desapareció de la tabla.
+        return "redirect:/crud/cliente/lista";
+    }
 }
