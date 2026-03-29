@@ -67,19 +67,18 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     // MÉTODO eliminarCliente: Implementa la destrucción del registro usando el camino del Objeto.
-    // ANOTACIÓN @Transactional: ¡Crucial! Requerido para cualquier operación que modifique la BD.
     @Override
     @Transactional
     public void eliminarCliente(int id) {
-
-        // 1. Obtenemos la conexión actual a la base de datos.
         Session miSession = sessionFactory.getCurrentSession();
 
-        // 2. Buscamos el objeto en la base de datos para traerlo a la memoria.
+        // 1. Buscamos al cliente
         Cliente clienteABorrar = miSession.get(Cliente.class, id);
 
-        // 3. Utilizamos el método .delete() de Hibernate para destruir el objeto.
-        // Al finalizar el método, Spring hace Commit y genera el: "DELETE FROM cliente WHERE id = ?"
-        miSession.delete(clienteABorrar);
+        // 2. Solo lo borramos si realmente lo encontramos
+        if (clienteABorrar != null) {
+            miSession.delete(clienteABorrar);
+        }
+        // Si es null, simplemente no hace nada y el programa no falla.
     }
 }
