@@ -38,17 +38,31 @@ public class ClienteDAOImpl implements ClienteDAO {
         return clientes;
     }
 
-    // MÉTODO insertarCliente: Implementa la escritura de un nuevo registro.
+    // MÉTODO guardarCliente (antes insertarCliente): Implementa la escritura (Upsert).
     @Override
     @Transactional
-    public void insertarCliente(Cliente elCliente) {
+    public void guardarCliente(Cliente elCliente) {
 
         // 1. Obtenemos la conexión a la base de datos gestionada por Spring.
         Session miSession = sessionFactory.getCurrentSession();
 
-        // 2. El método .save() toma el objeto Java, lee sus anotaciones (@Entity, @Column)
-        // y genera automáticamente la instrucción "INSERT INTO cliente (nombre, apellido...) VALUES (?, ?...)"
-        // Como está bajo @Transactional, Spring confirmará (Commit) este guardado al terminar el método.
-        miSession.save(elCliente);
+        // 2. El método .saveOrUpdate() evalúa el ID del objeto que recibe.
+        // Si el ID es 0 o nulo -> Genera un INSERT (Crear).
+        // Si el ID existe (ej. 7) -> Genera un UPDATE (Modificar).
+        // Como está bajo @Transactional, Spring confirmará (Commit) este guardado automáticamente.
+        miSession.saveOrUpdate(elCliente);
+    }
+
+    // MÉTODO getClienteById: Recupera un único registro basado en su ID.
+    @Override
+    @Transactional
+    public Cliente getClienteById(int id) {
+
+        // 1. Obtenemos la conexión actual a la base de datos.
+        Session miSession = sessionFactory.getCurrentSession();
+
+        // 2. Usamos el método .get() de Hibernate.
+        // Le pasamos la clase que queremos mapear (Cliente.class) y la clave primaria (id).
+        return miSession.get(Cliente.class, id);
     }
 }

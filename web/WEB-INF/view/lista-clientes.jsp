@@ -55,6 +55,18 @@
 
                 <c:forEach var="cliente" items="${clientes}">
 
+                    <%--
+                    Construimos la ruta de forma dinámica para cada cliente de la lista.
+                     --%>
+                    <c:url var="linkActualizar" value="/crud/cliente/muestraFormularioActualizar">
+
+                        <%-- Inyectamos el ID del cliente actual en la URL --%>
+                        <%-- Spring y el navegador construyen una URL con este formato al final,
+                        por ejemplo: .../muestraFormularioActualizar?clienteId=5
+                        Ese signo de interrogación (?) significa que empieza el envío de variables --%>
+                        <c:param name="clienteId" value="${cliente.id}" />
+                    </c:url>
+
                     <tr>
                         <td>${cliente.id}</td>
 
@@ -66,7 +78,7 @@
 
                         <td class="text-center">
 
-                            <a href="#" class="btn btn-primary btn-sm">
+                            <a href="${linkActualizar}" class="btn btn-primary btn-sm">
                                 <i class="fa-solid fa-pen-to-square"></i> Editar
                             </a>
 

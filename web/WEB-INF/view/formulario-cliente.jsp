@@ -1,7 +1,7 @@
 <%--
     SECCIÓN 1: IMPORTACIONES
     Agregamos la librería de Spring Forms. El prefijo "form" nos permitirá
-    usar etiquetas mágicas que se comunican directamente con nuestros objetos Java.
+    usar etiquetas (tags) que se comunican directamente con nuestros objetos Java.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -36,16 +36,16 @@
 
                 <%--
                     ETIQUETA form:form (El corazón del Binding)
-                    - action="insertarCliente": Es la URL a la que viajarán los datos al hacer clic en Guardar.
-                    - modelAttribute="cliente": Debe llamarse EXACTAMENTE IGUAL que el atributo que pusiste
-                                                en tu Controlador (elModelo.addAttribute("cliente", elCliente);).
+                    - action="guardarCliente": Es la URL a la que viajarán los datos al hacer clic en Guardar.
+                                               Al llamarse "guardar" reflejamos que sirve para ambas acciones (Insert o Update).
+                    - modelAttribute="cliente": Debe llamarse EXACTAMENTE IGUAL que el atributo del Controlador (elModelo.addAttribute("cliente", elCliente);).
                     - method="POST": Oculta los datos de la URL por seguridad.
                 --%>
-                <form:form action="insertarCliente" modelAttribute="cliente" method="POST">
+                <form:form action="guardarCliente" modelAttribute="cliente" method="POST">
 
                     <%--
                         CAMPO OCULTO (Hidden)
-                        Esto es vital. Necesitamos que el formulario viaje con el ID del cliente.
+                        Esto es vital. Es necesario que el formulario viaje con el ID del cliente.
                         Si el ID es 0 o nulo, Spring/Hibernate sabrá que es un cliente NUEVO (Insert).
                         Si el ID tiene un número, sabrá que debe ACTUALIZARLO (Update).
                     --%>
@@ -69,7 +69,7 @@
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
 
-                        <a href="${pageContext.request.contextPath}/cliente/lista" class="btn btn-outline-secondary me-md-2">
+                        <a href="${pageContext.request.contextPath}/crud/cliente/lista" class="btn btn-outline-secondary me-md-2">
                             <i class="fa-solid fa-arrow-left"></i> Cancelar
                         </a>
 

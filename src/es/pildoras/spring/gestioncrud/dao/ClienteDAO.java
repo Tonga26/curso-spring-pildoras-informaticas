@@ -9,7 +9,10 @@ public interface ClienteDAO {
     // MÉTODO getClientes: Retorna una colección List con todos los clientes de la BD.
     List<Cliente> getClientes();
 
-    // MÉTODO insertarCliente: Recibe un objeto Cliente y lo persiste en la BD.
+    // MÉTODO guardarCliente: Recibe un objeto Cliente y evalúa si debe insertarlo o actualizarlo.
     // Parámetro 'elCliente': El objeto hidratado que viene desde el Controlador.
-    void insertarCliente(Cliente elCliente);
+    void guardarCliente(Cliente elCliente);
+
+    // MÉTODO getClienteById: Busca un registro específico utilizando su clave primaria.
+    Cliente getClienteById(int id);
 }
