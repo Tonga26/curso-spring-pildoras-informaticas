@@ -12,12 +12,14 @@ public class ClasePrincipal {
         AnnotationConfigApplicationContext contexto = new AnnotationConfigApplicationContext(Configuracion.class);
 
         // 2. Obtenemos el bean del contenedor de spring
-        ClienteDAO elCliente = contexto.getBean("clienteDAO", ClienteDAO.class);
+        ClienteDAO elClienteNormal = contexto.getBean("clienteDAO", ClienteDAO.class);
 
         ClienteVipDAO elClienteVip = contexto.getBean("clienteVipDAO", ClienteVipDAO.class);
 
+        Cliente cliente1 = new Cliente();
+
         // 3. Llamamos al metodo
-        elCliente.insertaCliente(); // este es el nombre del método que debe coincidir con la anotacion @before
+        elClienteNormal.insertaCliente(cliente1); // este es el nombre del método que debe coincidir con la anotacion @before
 
         elClienteVip.insertaClienteVip(); // este es el nombre del método que debe coincidir con la anotacion @before
 
