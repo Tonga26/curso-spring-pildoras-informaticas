@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginConAspecto {
 
-    @Before("execution(public * insertaCliente*(es.pildoras.spring.gestionaop.Cliente))")
+    @Before("execution(public * insertaCliente*(..))")
     public void antesInsertarCliente(){
         System.out.println("El usuario está logueado.");
         System.out.println("El perfil para insertar clientes es correcto.");
