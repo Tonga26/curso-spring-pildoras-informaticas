@@ -11,4 +11,6 @@ public class ClienteDAO {
         System.out.println("Trabajo realizado ok. Cliente NORMAL insertado con éxito.");
 
     }
+
+
 }

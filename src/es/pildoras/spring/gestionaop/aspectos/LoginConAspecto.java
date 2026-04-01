@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginConAspecto {
 
-    @Pointcut("execution(public * insertaCliente*(..))")
+    //@Pointcut("execution(public * insertaCliente*(..))")
+    @Pointcut("execution(* es.pildoras.spring.gestionaop.dao.*.*(..))")
     private void paraClientes(){};
 
     @Before("paraClientes()")
