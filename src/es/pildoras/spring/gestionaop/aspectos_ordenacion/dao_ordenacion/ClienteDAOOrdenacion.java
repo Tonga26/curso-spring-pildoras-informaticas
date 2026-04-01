@@ -1,6 +1,5 @@
-package es.pildoras.spring.gestionaop.aspectos_ordenacion.daoordenacion;
+package es.pildoras.spring.gestionaop.aspectos_ordenacion.dao_ordenacion;
 
-import es.pildoras.spring.gestionaop.aspectos_basicos.ClienteBasicos;
 import es.pildoras.spring.gestionaop.aspectos_ordenacion.ClienteOrdenacion;
 import org.springframework.stereotype.Component;
 

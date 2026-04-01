@@ -1,8 +1,8 @@
 package es.pildoras.spring.gestionaop.aspectos_ordenacion;
 
 import es.pildoras.spring.gestionaop.Configuracion;
-import es.pildoras.spring.gestionaop.aspectos_ordenacion.daoordenacion.ClienteDAOOrdenacion;
-import es.pildoras.spring.gestionaop.aspectos_ordenacion.daoordenacion.ClienteVipDAOOrdenacion;
+import es.pildoras.spring.gestionaop.aspectos_ordenacion.dao_ordenacion.ClienteDAOOrdenacion;
+import es.pildoras.spring.gestionaop.aspectos_ordenacion.dao_ordenacion.ClienteVipDAOOrdenacion;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ClasePrincipalOrdenacion {
@@ -13,9 +13,9 @@ public class ClasePrincipalOrdenacion {
         AnnotationConfigApplicationContext contexto = new AnnotationConfigApplicationContext(Configuracion.class);
 
         // 2. Obtenemos el bean del contenedor de spring
-        ClienteDAOOrdenacion elClienteNormal = contexto.getBean("clienteDAO", ClienteDAOOrdenacion.class);
+        ClienteDAOOrdenacion elClienteNormal = contexto.getBean("clienteDAOOrdenacion", ClienteDAOOrdenacion.class);
 
-        ClienteVipDAOOrdenacion elClienteVip = contexto.getBean("clienteVipDAO", ClienteVipDAOOrdenacion.class);
+        ClienteVipDAOOrdenacion elClienteVip = contexto.getBean("clienteVipDAOOrdenacion", ClienteVipDAOOrdenacion.class);
 
         ClienteOrdenacion cliente1 = new ClienteOrdenacion();
 
