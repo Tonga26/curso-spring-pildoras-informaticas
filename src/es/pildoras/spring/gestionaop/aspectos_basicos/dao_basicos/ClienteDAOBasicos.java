@@ -1,15 +1,15 @@
-package es.pildoras.spring.gestionaop.dao;
+package es.pildoras.spring.gestionaop.aspectos_basicos.dao_basicos;
 
+import es.pildoras.spring.gestionaop.aspectos_basicos.ClienteBasicos;
 import org.springframework.stereotype.Component;
-import es.pildoras.spring.gestionaop.Cliente;
 
 @Component
-public class ClienteDAO {
+public class ClienteDAOBasicos {
 
     private String valoracionClienteNormal;
     private String codigoClienteNormal;
 
-    public void insertaCliente(Cliente elCliente, String tipo){
+    public void insertaCliente(ClienteBasicos elCliente, String tipo){
 
         System.out.println("Trabajo realizado ok. Cliente NORMAL insertado con éxito.");
 

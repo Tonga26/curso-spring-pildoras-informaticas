@@ -1,10 +1,12 @@
-package es.pildoras.spring.gestionaop;
+package es.pildoras.spring.gestionaop.aspectos_ordenacion;
 
+import es.pildoras.spring.gestionaop.Configuracion;
+import es.pildoras.spring.gestionaop.aspectos_basicos.ClienteBasicos;
 import es.pildoras.spring.gestionaop.dao.ClienteDAO;
 import es.pildoras.spring.gestionaop.dao.ClienteVipDAO;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class ClasePrincipal {
+public class ClasePrincipalOrdenacion {
     
     public static void main(String[] args){
 
@@ -16,7 +18,7 @@ public class ClasePrincipal {
 
         ClienteVipDAO elClienteVip = contexto.getBean("clienteVipDAO", ClienteVipDAO.class);
 
-        Cliente cliente1 = new Cliente();
+        ClienteBasicos cliente1 = new ClienteBasicos();
 
         // 3. Llamamos al metodo
         elClienteNormal.insertaCliente(cliente1, "Normal"); // este es el nombre del método que debe coincidir con la anotacion @before

@@ -1,9 +1,7 @@
-package es.pildoras.spring.gestionaop.aspectos;
+package es.pildoras.spring.gestionaop.aspectos_basicos;
 
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 
 /**
  * =========================================================================================
@@ -12,10 +10,10 @@ import org.springframework.stereotype.Component;
  * =========================================================================================
  */
 // @Aspect: Le indica a Spring que esta no es una clase normal, sino un Aspecto (contiene Pointcuts y Advices).
-@Aspect
+// @Aspect
 // @Component: Registra esta clase en el contenedor de Spring (Inyección de Dependencias) para que la reconozca.
-@Component
-public class LoginConAspecto {
+// @Component
+public class LoginConAspectoBasicos {
 
     /**
      * =========================================================================================

@@ -1,6 +1,6 @@
-package es.pildoras.spring.gestionaop;
+package es.pildoras.spring.gestionaop.aspectos_basicos;
 
-public class Cliente {
+public class ClienteBasicos {
 
     private String nombre;
     private String tipo;

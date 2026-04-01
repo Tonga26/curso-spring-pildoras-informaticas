@@ -1,9 +1,9 @@
-package es.pildoras.spring.gestionaop.dao;
+package es.pildoras.spring.gestionaop.aspectos_basicos.dao_basicos;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClienteVipDAO {
+public class ClienteVipDAOBasicos {
 
     public void insertaClienteVip(){
         System.out.println("Trabajo realizado ok. Cliente VIP insertado con éxito.");
