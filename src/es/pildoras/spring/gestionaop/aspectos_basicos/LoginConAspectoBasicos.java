@@ -1,7 +1,9 @@
 package es.pildoras.spring.gestionaop.aspectos_basicos;
 
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
 
 /**
  * =========================================================================================
@@ -10,9 +12,9 @@ import org.aspectj.lang.annotation.Pointcut;
  * =========================================================================================
  */
 // @Aspect: Le indica a Spring que esta no es una clase normal, sino un Aspecto (contiene Pointcuts y Advices).
-// @Aspect
+@Aspect
 // @Component: Registra esta clase en el contenedor de Spring (Inyección de Dependencias) para que la reconozca.
-// @Component
+@Component
 public class LoginConAspectoBasicos {
 
     /**
@@ -29,7 +31,7 @@ public class LoginConAspectoBasicos {
      * .*.*(..): Significa "Cualquier clase" . "Cualquier método" ( "Con cualquier parámetro" ).
      * Este es nuestro Pointcut "Universo", atrapa todo en esa carpeta.
      */
-    @Pointcut("execution(* es.pildoras.spring.gestionaop.dao.*.*(..))")
+    @Pointcut("execution(* es.pildoras.spring.gestionaop.aspectos_basicos.dao_basicos.*.*(..))")
     private void paraClientes(){};
 
     // Aplicamos los pointcut solo a los GETTERS del paquete dao
@@ -37,14 +39,14 @@ public class LoginConAspectoBasicos {
      * .get*(..): El asterisco después de 'get' obliga a que el nombre del método comience estrictamente
      * con la palabra "get" (ej: getNombre, getCodigo).
      */
-    @Pointcut("execution(* es.pildoras.spring.gestionaop.dao.*.get*(..))")
+    @Pointcut("execution(* es.pildoras.spring.gestionaop.aspectos_basicos.dao_basicos.*.get*(..))")
     private void paraGetters(){};
 
     // Aplicamos los pointcut solo a los SETTERS del paquete dao
     /* EXPLICACIÓN:
      * .set*(..): Igual que el anterior, pero restringe la búsqueda a métodos que empiecen con "set".
      */
-    @Pointcut("execution(* es.pildoras.spring.gestionaop.dao.*.set*(..))")
+    @Pointcut("execution(* es.pildoras.spring.gestionaop.aspectos_basicos.dao_basicos.*.set*(..))")
     private void paraSetters(){};
 
 
