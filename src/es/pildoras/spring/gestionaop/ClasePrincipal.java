@@ -23,6 +23,14 @@ public class ClasePrincipal {
 
         elClienteVip.insertaClienteVip(); // este es el nombre del método que debe coincidir con la anotacion @before
 
+
+        // Pruebas combinaciones de pointcuts (getters y setters)
+        elClienteNormal.setCodigoClienteNormal("2349625789");
+        elClienteNormal.setValoracionClienteNormal("Positiva");
+
+        String codigoCl = elClienteNormal.getCodigoClienteNormal();
+        String valoracionCl = elClienteNormal.getValoracionClienteNormal();
+
         // 4. Cerrar el contexto
         contexto.close();
     }
