@@ -62,23 +62,48 @@ public class LoginConAspectoAfter {
     /* =========================================================================================
        SECCIÓN 4: ADVICE @AfterReturning (INTERCEPCIÓN DESPUÉS DE RETORNAR)
        ========================================================================================= */
-    // @AfterReturning: Se ejecuta SOLO si el método finaliza correctamente (sin excepciones) y retorna un valor.
-    // pointcut = "...": Especificamos exactamente a qué método queremos escuchar (encuentraClientes).
-    // returning = "listaDeClientes": Le decimos a Spring CÓMO se va a llamar la variable donde queremos que guarde lo que retornó el método.
     @AfterReturning(
             pointcut = "execution(* es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfter.encuentraClientes(..))",
             returning = "listaDeClientes"
     )
-    // El parámetro List<ClienteAfter> listaDeClientes recibe la información gracias a que coincide con el nombre en 'returning'.
     public void tareaTrasEncontrarClientes(List<ClienteAfter> listaDeClientes){
 
-        // Iteramos la lista de clientes que nos devolvió el método original (encuentraClientes).
+        // Ejecutamos el método que manipula los datos UNA SOLA VEZ, antes de recorrer la lista para la impresión.
+        procesadoDatosAfterReturning(listaDeClientes);
+
+        // Iteramos la lista de clientes (ahora ya procesada y modificada).
         for (ClienteAfter cl : listaDeClientes){
             // Verificamos si el cliente tiene la etiqueta "VIP".
             if (cl.getTipo().equals("VIP")){
-                // Si es VIP, lo procesamos de forma especial (en este caso, un mensaje en consola).
+                // Si es VIP, imprimimos en consola.
                 System.out.println("Existen clientes VIP en el listado. Nombre: " + cl.getNombre());
             }
+        }
+    }
+
+    /* =========================================================================================
+       SECCIÓN 5: PROCESAMIENTO DE DATOS
+       ========================================================================================= */
+    /**
+     * Este método privado se encarga de "manipular" o formatear los datos de la lista
+     * interceptada ANTES de que lleguen de vuelta al flujo normal del programa principal.
+     *
+     * @param listaDeClientes La lista original devuelta por el método encuentraClientes().
+     */
+    private void procesadoDatosAfterReturning(List<ClienteAfter> listaDeClientes) {
+
+        // Iteramos sobre cada cliente dentro de la lista que recibimos.
+        for (ClienteAfter cl : listaDeClientes){
+
+            // 1. Tomamos el nombre actual del cliente, lo convertimos a MAYÚSCULAS usando toUpperCase(),
+            // y le concatenamos el texto "V.I.P. " adelante. Guardamos el resultado en una variable.
+            String datosProcesados = "V.I.P. " + cl.getNombre().toUpperCase();
+
+            // 2. Usamos el setter para sobrescribir el nombre original del objeto Cliente con nuestro texto modificado.
+            // IMPORTANTE: Como los objetos en Java se pasan por referencia, al modificar el objeto 'cl' aquí,
+            // estamos modificando el objeto real en memoria. Por ende, la lista que reciba tu método main
+            // ya llegará con todos estos nombres transformados.
+            cl.setNombre(datosProcesados);
         }
     }
 }
