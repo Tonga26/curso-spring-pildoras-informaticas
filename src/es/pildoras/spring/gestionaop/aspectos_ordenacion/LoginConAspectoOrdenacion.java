@@ -15,9 +15,9 @@ import org.springframework.stereotype.Component;
  * =========================================================================================
  */
 // @Aspect: Le indica a Spring que esta no es una clase normal, sino un Aspecto (contiene Pointcuts y Advices).
-@Aspect
+// @Aspect
 // @Component: Registra esta clase en el contenedor de Spring (Inyección de Dependencias) para que la reconozca.
-@Component
+// @Component
 // @Order(3): Tiene la prioridad más baja de nuestro ecosistema actual. Se ejecutará al final.
 @Order(3)
 public class LoginConAspectoOrdenacion {

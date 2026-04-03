@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 public class ClienteDAOOrdenacion {
 
     public void insertaCliente(ClienteOrdenacion elCliente, String tipo){
-
         System.out.println("Trabajo realizado ok. Cliente NORMAL insertado con éxito.");
-
     }
-
 }

@@ -25,7 +25,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 // @ComponentScan("es.pildoras.spring.gestionaop.aspectos_basicos")
 
 // ---> ACTIVA PARA PROBAR: Ordenación de Aspectos
-@ComponentScan("es.pildoras.spring.gestionaop.aspectos_ordenacion")
+@ComponentScan("es.pildoras.spring.gestionaop.aspectos_afterreturning")
 public class Configuracion {
     // Clase vacía, Spring solo lee sus anotaciones.
 }
