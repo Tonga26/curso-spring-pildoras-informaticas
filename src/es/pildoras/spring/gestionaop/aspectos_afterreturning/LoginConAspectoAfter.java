@@ -24,6 +24,11 @@ public class LoginConAspectoAfter {
     /* =========================================================================================
        SECCIÓN 2: POINTCUT CENTRALIZADO
        ========================================================================================= */
+    /**
+     * Pointcut centralizado que define el patrón de búsqueda para los métodos a interceptar.
+     * Al estar vacío y solo tener la anotación, actúa como una "variable" que almacena
+     * la ruta de ejecución para ser reutilizada en múltiples Advices (como @Before).
+     */
     // Expresión: Se aplicará a CUALQUIER método (*), de CUALQUIER clase (*), dentro del paquete dao_after, con cualquier cantidad de parámetros (..).
     @Pointcut("execution(* es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.*.*(..))")
     public void paraClientes(){};
@@ -31,6 +36,14 @@ public class LoginConAspectoAfter {
     /* =========================================================================================
        SECCIÓN 3: ADVICE @Before (INTERCEPCIÓN ANTES DE LA EJECUCIÓN)
        ========================================================================================= */
+    /**
+     * Advice del tipo @Before que se ejecuta inmediatamente ANTES que el método objetivo.
+     * Realiza comprobaciones de seguridad (simulación de login y verificación de perfil)
+     * e inspecciona los argumentos que el método interceptado está a punto de recibir.
+     *
+     * @param miJoin Objeto JoinPoint inyectado por Spring que contiene los metadatos
+     * y el contexto del método interceptado (incluyendo sus argumentos).
+     */
     // @Before indica que esto se ejecuta ANTES del método objetivo. Usa nuestro pointcut 'paraClientes()'.
     @Before("paraClientes()")
     // JoinPoint crea un punto de intersección para obtener los parámetros del método
@@ -62,6 +75,21 @@ public class LoginConAspectoAfter {
     /* =========================================================================================
        SECCIÓN 4: ADVICE @AfterReturning (INTERCEPCIÓN DESPUÉS DE RETORNAR)
        ========================================================================================= */
+    /**
+     * Advice del tipo @AfterReturning que se ejecuta EXCLUSIVAMENTE después de que el método
+     * interceptado (encuentraClientes) finaliza correctamente y retorna un valor.
+     * <p>
+     * Este método actúa como un "filtro de salida". Intercepta la lista original devuelta
+     * por la Base de Datos, envía esa lista a procesar/modificar al vuelo, y luego recorre
+     * los datos ya modificados para buscar e imprimir en consola aquellos clientes que sean VIP.
+     *
+     * @param listaDeClientes La colección de clientes interceptada directamente del 'return'
+     * del método encuentraClientes(). Es crucial que el nombre de este
+     * parámetro coincida exactamente con el atributo 'returning' de la anotación.
+     */
+    // @AfterReturning: Se ejecuta SOLO si el método finaliza correctamente (sin excepciones) y retorna un valor.
+    // pointcut = "...": Especificamos exactamente a qué método queremos escuchar (encuentraClientes).
+    // returning = "listaDeClientes": Le decimos a Spring CÓMO se va a llamar la variable donde queremos que guarde lo que retornó el método.
     @AfterReturning(
             pointcut = "execution(* es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfter.encuentraClientes(..))",
             returning = "listaDeClientes"
