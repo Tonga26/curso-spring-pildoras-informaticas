@@ -30,9 +30,12 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 // ---> 2. ACTIVA PARA PROBAR: Ordenación de Aspectos (@Order)
 // @ComponentScan("es.pildoras.spring.gestionaop.aspectos_ordenacion")
 
-// ---> 3. ACTIVA PARA PROBAR: Aspectos After Returning (LECCIÓN ACTUAL)
+// ---> 3. ACTIVA PARA PROBAR: Aspectos After Returning
+// @ComponentScan("es.pildoras.spring.gestionaop.aspectos_afterreturning")
+
+// ---> 4. ACTIVA PARA PROBAR: Aspectos After Throwing (LECCIÓN ACTUAL)
 // Al estar sin comentar, Spring solo inyectará los Beans que vivan dentro de este paquete.
-@ComponentScan("es.pildoras.spring.gestionaop.aspectos_afterreturning")
+@ComponentScan("es.pildoras.spring.gestionaop.aspectos_afterthrowing")
 
 public class Configuracion {
     // El cuerpo de la clase se mantiene vacío.

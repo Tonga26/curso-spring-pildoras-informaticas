@@ -1,6 +1,6 @@
 package es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after;
 
-import es.pildoras.spring.gestionaop.aspectos_afterreturning.ClienteAfter;
+import es.pildoras.spring.gestionaop.aspectos_afterreturning.ClienteAfterReturning;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -8,14 +8,14 @@ import java.util.List;
 
 // @Component: Registra la clase como un Bean en Spring para poder inyectarla luego (en ClasePrincipalAfter).
 @Component
-public class ClienteDAOAfter {
+public class ClienteDAOAfterReturning {
 
     /* ==========================================================================
        MÉTODO 1: INSERCIÓN (Interceptado por @Before)
        ========================================================================== */
     // Método que simula insertar un cliente en la BBDD.
     // Recibe un objeto ClienteAfter y un String con el tipo.
-    public void insertaCliente(ClienteAfter elCliente, String tipo){
+    public void insertaCliente(ClienteAfterReturning elCliente, String tipo){
         System.out.println("Trabajo realizado ok. Cliente NORMAL insertado con éxito.");
     }
 
@@ -24,17 +24,17 @@ public class ClienteDAOAfter {
        ========================================================================== */
     // Método que simula realizar un SELECT a la base de datos para obtener todos los clientes.
     // Retorna una lista de objetos ClienteAfter.
-    public List<ClienteAfter> encuentraClientes(){
+    public List<ClienteAfterReturning> encuentraClientes(){
 
         // Inicializamos una lista vacía.
-        List<ClienteAfter> listaCliente = new ArrayList<>();
+        List<ClienteAfterReturning> listaCliente = new ArrayList<>();
 
         // Creamos objetos simulando los registros devueltos por la base de datos.
-        ClienteAfter cliente1 = new ClienteAfter("María", "Normal");
-        ClienteAfter cliente2 = new ClienteAfter("Ana", "Normal");
+        ClienteAfterReturning cliente1 = new ClienteAfterReturning("María", "Normal");
+        ClienteAfterReturning cliente2 = new ClienteAfterReturning("Ana", "Normal");
         // Notar que este es el cliente VIP que nuestro aspecto @AfterReturning va a detectar.
-        ClienteAfter cliente3 = new ClienteAfter("Sandra", "VIP");
-        ClienteAfter cliente4 = new ClienteAfter("Antonio", "Normal");
+        ClienteAfterReturning cliente3 = new ClienteAfterReturning("Sandra", "VIP");
+        ClienteAfterReturning cliente4 = new ClienteAfterReturning("Antonio", "Normal");
 
         // Agregamos los objetos a la lista.
         listaCliente.add(cliente1);

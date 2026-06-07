@@ -1,10 +1,10 @@
 package es.pildoras.spring.gestionaop.aspectos_afterreturning;
 
 import es.pildoras.spring.gestionaop.Configuracion;
-import es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfter;
+import es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfterReturning;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class ClasePrincipalAfter {
+public class ClasePrincipalAfterReturning {
 
     public static void main(String[] args){
 
@@ -21,7 +21,7 @@ public class ClasePrincipalAfter {
            ========================================================================== */
         // Le pedimos a Spring que nos entregue la instancia (Bean) de 'ClienteDAOAfter'.
         // Nota: Como usamos @Component en ClienteDAOAfter, el id por defecto es el nombre de la clase con la primera letra en minúscula.
-        ClienteDAOAfter elClienteNormal = contexto.getBean("clienteDAOAfter", ClienteDAOAfter.class);
+        ClienteDAOAfterReturning elClienteNormal = contexto.getBean("clienteDAOAfterReturning", ClienteDAOAfterReturning.class);
 
         /* ==========================================================================
            PASO 3: EJECUTAR EL MÉTODO (Y DESENCADENAR LOS ASPECTOS)

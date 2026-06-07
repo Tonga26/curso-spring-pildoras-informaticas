@@ -19,7 +19,7 @@ import java.util.List;
 @Aspect
 // @Component: Registra esta clase en el contenedor de Spring (Inyección de Dependencias) para que la reconozca.
 @Component
-public class LoginConAspectoAfter {
+public class LoginConAspectoAfterReturning {
 
     /* =========================================================================================
        SECCIÓN 2: POINTCUT CENTRALIZADO
@@ -60,10 +60,10 @@ public class LoginConAspectoAfter {
         for (Object temp : argumentos){
 
             // Comprobamos si el argumento actual es una instancia de nuestra clase ClienteAfter.
-            if (temp instanceof ClienteAfter){
+            if (temp instanceof ClienteAfterReturning){
 
                 // Si es así, hacemos un "Cast" para transformarlo de Object a ClienteAfter.
-                ClienteAfter elCliente = (ClienteAfter) temp;
+                ClienteAfterReturning elCliente = (ClienteAfterReturning) temp;
 
                 // Auditoría: Imprimimos los datos interceptados.
                 System.out.println("Nombre del cliente a insertar: " + elCliente.getNombre());
@@ -91,16 +91,16 @@ public class LoginConAspectoAfter {
     // pointcut = "...": Especificamos exactamente a qué método queremos escuchar (encuentraClientes).
     // returning = "listaDeClientes": Le decimos a Spring CÓMO se va a llamar la variable donde queremos que guarde lo que retornó el método.
     @AfterReturning(
-            pointcut = "execution(* es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfter.encuentraClientes(..))",
+            pointcut = "execution(* es.pildoras.spring.gestionaop.aspectos_afterreturning.dao_after.ClienteDAOAfterReturning.encuentraClientes(..))",
             returning = "listaDeClientes"
     )
-    public void tareaTrasEncontrarClientes(List<ClienteAfter> listaDeClientes){
+    public void tareaTrasEncontrarClientes(List<ClienteAfterReturning> listaDeClientes){
 
         // Ejecutamos el método que manipula los datos UNA SOLA VEZ, antes de recorrer la lista para la impresión.
         procesadoDatosAfterReturning(listaDeClientes);
 
         // Iteramos la lista de clientes (ahora ya procesada y modificada).
-        for (ClienteAfter cl : listaDeClientes){
+        for (ClienteAfterReturning cl : listaDeClientes){
             // Verificamos si el cliente tiene la etiqueta "VIP".
             if (cl.getTipo().equals("VIP")){
                 // Si es VIP, imprimimos en consola.
@@ -118,10 +118,10 @@ public class LoginConAspectoAfter {
      *
      * @param listaDeClientes La lista original devuelta por el método encuentraClientes().
      */
-    private void procesadoDatosAfterReturning(List<ClienteAfter> listaDeClientes) {
+    private void procesadoDatosAfterReturning(List<ClienteAfterReturning> listaDeClientes) {
 
         // Iteramos sobre cada cliente dentro de la lista que recibimos.
-        for (ClienteAfter cl : listaDeClientes){
+        for (ClienteAfterReturning cl : listaDeClientes){
 
             // 1. Tomamos el nombre actual del cliente, lo convertimos a MAYÚSCULAS usando toUpperCase(),
             // y le concatenamos el texto "V.I.P. " adelante. Guardamos el resultado en una variable.

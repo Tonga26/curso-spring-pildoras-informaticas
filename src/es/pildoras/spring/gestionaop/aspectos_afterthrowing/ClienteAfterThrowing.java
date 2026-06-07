@@ -1,14 +1,14 @@
-package es.pildoras.spring.gestionaop.aspectos_afterreturning;
+package es.pildoras.spring.gestionaop.aspectos_afterthrowing;
 
-public class ClienteAfter {
+public class ClienteAfterThrowing {
 
     private String nombre;
     private String tipo;
 
-    public ClienteAfter() {
+    public ClienteAfterThrowing() {
     }
 
-    public ClienteAfter(String nombre, String tipo) {
+    public ClienteAfterThrowing(String nombre, String tipo) {
         this.nombre = nombre;
         this.tipo = tipo;
     }
